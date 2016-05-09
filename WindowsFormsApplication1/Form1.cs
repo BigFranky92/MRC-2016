@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -27,13 +28,22 @@ namespace WindowsFormsApplication1
         {
             
             //AsynchronousSocketListener.StartListening();
+            int parsedValue;
+            if (!int.TryParse(textBox1.Text, out parsedValue))
+            {
+                MessageBox.Show("This is a number only field");
+                return;
+            }
             int porta = int.Parse(textBox1.Text);
+            if (porta < 0)
+            {
+                MessageBox.Show("Numero di porta non valido, immettere un numero di porta > 0");
+                return;
+            }
             object poo = (object)porta;
             Thread workerThread = new Thread(AsynchronousSocketListener.StartListening);
             workerThread.Start(poo);
             Console.WriteLine("main thread: Starting StartListening...");
-
-
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -69,6 +79,10 @@ namespace WindowsFormsApplication1
             }
         }
 
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            
+        }
     }
 
     public class StateObject
@@ -252,4 +266,6 @@ namespace WindowsFormsApplication1
         }
 
     }
+
+
 }
