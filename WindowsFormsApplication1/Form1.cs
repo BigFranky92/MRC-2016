@@ -25,7 +25,7 @@ namespace WindowsFormsApplication1
 
         private void button1_Click(object sender, EventArgs e)
         {
-            int ciccio = 0;
+            
             //AsynchronousSocketListener.StartListening();
             int porta = int.Parse(textBox1.Text);
             object poo = (object)porta;
