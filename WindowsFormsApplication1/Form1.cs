@@ -32,7 +32,7 @@ namespace WindowsFormsApplication1
 
             //AsynchronousSocketListener.StartListening();
             int parsedValue;
-            int weepeee;
+            int weepeeeee;
             if (!int.TryParse(textBox1.Text, out parsedValue))
             {
                 MessageBox.Show("This is a number only field");
