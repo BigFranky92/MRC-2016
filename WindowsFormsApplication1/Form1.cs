@@ -15,6 +15,8 @@ using System.Net.Sockets;
 
 using System.Threading;
 
+int weepeee;
+
 namespace WindowsFormsApplication1
 {
 
