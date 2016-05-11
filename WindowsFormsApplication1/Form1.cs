@@ -469,12 +469,6 @@ public class StateObject
             }
         }
 
-        public static int MainPeppe(String[] args, object port)
-        {
-            StartListening(port);
-            return 0;
-        }
-
     }*/
 
 
