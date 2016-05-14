@@ -56,26 +56,26 @@ public class Asynchronous
         ris = SocketConnected(listener);
 
         Console.WriteLine(ris.ToString());
-
+        Console.WriteLine("Entro nel try");
         // Bind the socket to the local endpoint and listen for incoming connections.
         try
         {
             listener.Bind(localEndPoint);
             listener.Listen(100);
-
+            Console.WriteLine("Supero il listen");
             while (true)
             {
                 // Set the event to nonsignaled state.
                 allDone.Reset();
-
                 // Start an asynchronous socket to listen for connections.
                 Console.WriteLine("Waiting for a connection...");
                 listener.BeginAccept(
                     new AsyncCallback(AcceptCallback),
                     listener);
-
+                Console.WriteLine("prima del wait");
                 // Wait until a connection is made before continuing.
                 allDone.WaitOne();
+                Console.WriteLine("dopo il wait");
             }
 
         }
@@ -139,9 +139,10 @@ public class Asynchronous
             content = state.sb.ToString();
             if (content.IndexOf("<EOF>") > -1)
             {
+                Console.WriteLine("Entro nel parser");
                 parametri = content.Split('#');
                 new_parameters = true;
-
+                Console.WriteLine(parametri[0]);
                 // All the data has been read from the 
                 // client. Display it on the console.
                 Console.WriteLine("Read {0} bytes from socket. \n Data : {1}",
