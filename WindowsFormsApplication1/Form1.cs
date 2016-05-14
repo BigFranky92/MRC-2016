@@ -11,6 +11,7 @@ using System.Windows.Forms;
 
 
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
 
 using System.Threading;
@@ -22,6 +23,7 @@ namespace WindowsFormsApplication1
 
     public partial class Form1 : Form
     {
+        public delegate void aggiorna_videoCallBack();
         public Form1()
         {
             InitializeComponent();
@@ -29,10 +31,11 @@ namespace WindowsFormsApplication1
 
         private void button1_Click(object sender, EventArgs e)
         {
-            int port = 0; //Variabile in cui verrà immesso il valore della porta aperta per la connessione
+            int port = int.Parse(textBox1.Text); ; //Variabile in cui verrà immesso il valore della porta aperta per la connessione
             bool avanza = check_porta(port); //Una volta premuto il tasto, vengono effettuati dei controlli per vedere se il numero di porta scelto è valido
 
-            if (avanza)
+            Console.WriteLine(avanza);
+            if (avanza == true)
             {
                 object port_obj = (object)port;
                 Thread updateThread = new Thread(aggiorna_video); //Vengono fatti partire due thread, uno per aggiornare il video in tempo reale non appena vengono ricevuti nuovi valori
@@ -45,7 +48,7 @@ namespace WindowsFormsApplication1
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            /*string url = "http://checkip.dyndns.org";
+            /*string url = "http://checkip.dyndns.org";                               //Questo codice ci è servito per mostrare a video l'indirizzo IP esterno della centrale, ma non siamo ancora riusciti ad aprire la porta anche sull'indirizzo IP esterno
             System.Net.WebRequest req = System.Net.WebRequest.Create(url);
             System.Net.WebResponse resp = req.GetResponse();
             System.IO.StreamReader sr = new System.IO.StreamReader(resp.GetResponseStream());
@@ -96,7 +99,7 @@ namespace WindowsFormsApplication1
 
 
 
-        public void aggiorna_video() //Questa è la funzione per aggiornare il video in tempo reale utilizzata dal thread
+        private void aggiorna_video() //Questa è la funzione per aggiornare il video in tempo reale utilizzata dal thread
         {
             while (true) //Rimane in polling fino a quando non viene alzato il flag new_parameters e quindi ci sono nuovi dati da mostrare a video
             {
@@ -104,9 +107,20 @@ namespace WindowsFormsApplication1
                 {
                     try //L'aggiornamento dei dati a video viene fatto in un try-catch per evitare che vengano scritti dei dati nulli e vada in crash il programma
                     {
-                        textBox3.Text = Asynchronous.parametri[0];
-                        textBox4.Text = Asynchronous.parametri[1];
-                        textBox5.Text = Asynchronous.parametri[2];
+                        if (textBox3.InvokeRequired) //Viene utilizzato il metodo InvokeRequired in quanto il thread che va ad aggiornare le textBox non è lo stesso che le ha create, e quindi non ha un vero e proprio controllo su di esse
+                        {
+                            textBox3.Invoke((MethodInvoker)delegate { textBox3.Text = Asynchronous.parametri[0]; });
+                            textBox4.Invoke((MethodInvoker)delegate { textBox4.Text = Asynchronous.parametri[1]; });
+                            textBox5.Invoke((MethodInvoker)delegate { textBox5.Text = Asynchronous.parametri[2]; });
+                            textBox6.Invoke((MethodInvoker)delegate { textBox6.Text = Asynchronous.parametri[3]; });
+                        }
+                        else
+                        {
+                            textBox3.Text = Asynchronous.parametri[0];
+                            textBox4.Text = Asynchronous.parametri[1];
+                            textBox5.Text = Asynchronous.parametri[2];
+                            textBox6.Text = Asynchronous.parametri[3];
+                        }
                     }
                     catch (Exception e)
                     {
@@ -116,37 +130,42 @@ namespace WindowsFormsApplication1
             }
         }
 
-        private bool check_porta(int porta)
+
+
+        private bool check_porta(int porta) //Qui vengono fatti tutti i controlli di routine sulla porta scelta per far mettere in ascolto il server
         {
             int parsedValue;
-            if (!int.TryParse(textBox1.Text, out parsedValue))
+            porta = int.Parse(textBox1.Text);
+            if (!int.TryParse(textBox1.Text, out parsedValue)) //Controlliamo che il campo inserito sia numerico
             {
                 MessageBox.Show("Il campo porta deve essere numerico");
                 return false;
             }
-            porta = int.Parse(textBox1.Text);
-            if (porta < 0)
+            else if (porta < 0) //Che rientri nel range delle porte TCP/IP, quindi positivo
             {
                 MessageBox.Show("Numero di porta non valido, immettere un numero di porta > 0");
                 return false;
             }
-            if (porta > 65535)
+            else if (porta > 65535)// Ma anche minore di 2^16
             {
                 MessageBox.Show("Numero di porta non valido, immettere un numero di porta minore di 65535");
+                return false;
             }
-            IPHostEntry ipHost = Dns.Resolve(Dns.GetHostName());
-            IPAddress ip = ipHost.AddressList[0];
-            try
+            /*IPHostEntry ipServer = Dns.Resolve(Dns.GetHostName());
+            /*try
             {
-                TcpListener tcpListener = new TcpListener(ip, porta);
+                TcpListener tcpListener = new TcpListener(ipServer.AddressList[0], porta);
                 tcpListener.Start();
+                return true;
             }
             catch (SocketException ex)
             {
-                MessageBox.Show(ex.Message + ". Cambiare la porta selezionata", "Errore");
+                MessageBox.Show(ex.Message, "kaboom");
                 return false;
-            }
-            return true;
+            }*/
+            else return true;
+            
+
         }
     }
 }

@@ -18,6 +18,7 @@ using System.Threading;
 public class Asynchronous
 {
     public static string[] parametri;
+    public static string[] parametri_app;
     public static bool new_parameters = false;
 
     // Thread signal.
@@ -33,15 +34,6 @@ public class Asynchronous
         // The DNS name of the computer
         // running the listener is "host.contoso.com".
         IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
-        /*string url = "http://checkip.dyndns.org";
-        System.Net.WebRequest req = System.Net.WebRequest.Create(url);
-        System.Net.WebResponse resp = req.GetResponse();
-        System.IO.StreamReader sr = new System.IO.StreamReader(resp.GetResponseStream());
-        string response = sr.ReadToEnd().Trim();
-        string[] a = response.Split(':');
-        string a2 = a[1].Substring(1);
-        string[] a3 = a2.Split('<');
-        string a4 = a3[0];*/
         IPAddress ipAddress = ipHostInfo.AddressList[0];
 
         Console.WriteLine(ipAddress.ToString());
@@ -56,13 +48,11 @@ public class Asynchronous
         ris = SocketConnected(listener);
 
         Console.WriteLine(ris.ToString());
-        Console.WriteLine("Entro nel try");
         // Bind the socket to the local endpoint and listen for incoming connections.
         try
         {
             listener.Bind(localEndPoint);
             listener.Listen(100);
-            Console.WriteLine("Supero il listen");
             while (true)
             {
                 // Set the event to nonsignaled state.
@@ -72,10 +62,8 @@ public class Asynchronous
                 listener.BeginAccept(
                     new AsyncCallback(AcceptCallback),
                     listener);
-                Console.WriteLine("prima del wait");
                 // Wait until a connection is made before continuing.
                 allDone.WaitOne();
-                Console.WriteLine("dopo il wait");
             }
 
         }
@@ -139,8 +127,8 @@ public class Asynchronous
             content = state.sb.ToString();
             if (content.IndexOf("<EOF>") > -1)
             {
-                Console.WriteLine("Entro nel parser");
-                parametri = content.Split('#');
+                parametri_app = content.Split('<');
+                parametri = parametri_app[0].Split('#');
                 new_parameters = true;
                 Console.WriteLine(parametri[0]);
                 // All the data has been read from the 
