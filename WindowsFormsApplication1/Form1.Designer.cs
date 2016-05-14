@@ -28,41 +28,41 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.button1 = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.connectBtn = new System.Windows.Forms.Button();
+            this.portBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.ipBox = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.textBox4 = new System.Windows.Forms.TextBox();
-            this.textBox5 = new System.Windows.Forms.TextBox();
+            this.idBox = new System.Windows.Forms.TextBox();
+            this.tempBox = new System.Windows.Forms.TextBox();
+            this.humBox = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
-            this.textBox6 = new System.Windows.Forms.TextBox();
+            this.presBox = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
-            // button1
+            // connectBtn
             // 
-            this.button1.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.button1.Location = new System.Drawing.Point(498, 209);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(110, 37);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "START CONNECTION";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.connectBtn.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.connectBtn.Location = new System.Drawing.Point(498, 209);
+            this.connectBtn.Name = "connectBtn";
+            this.connectBtn.Size = new System.Drawing.Size(110, 37);
+            this.connectBtn.TabIndex = 0;
+            this.connectBtn.Text = "START CONNECTION";
+            this.connectBtn.UseVisualStyleBackColor = true;
+            this.connectBtn.Click += new System.EventHandler(this.button1_Click);
             // 
-            // textBox1
+            // portBox
             // 
-            this.textBox1.Location = new System.Drawing.Point(78, 49);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 20);
-            this.textBox1.TabIndex = 1;
-            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            this.portBox.Location = new System.Drawing.Point(78, 49);
+            this.portBox.Name = "portBox";
+            this.portBox.Size = new System.Drawing.Size(100, 20);
+            this.portBox.TabIndex = 1;
+            this.portBox.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // label1
             // 
@@ -82,14 +82,14 @@
             this.label2.TabIndex = 3;
             this.label2.Text = "IP";
             // 
-            // textBox2
+            // ipBox
             // 
-            this.textBox2.Location = new System.Drawing.Point(78, 11);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.ReadOnly = true;
-            this.textBox2.Size = new System.Drawing.Size(100, 20);
-            this.textBox2.TabIndex = 4;
-            this.textBox2.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
+            this.ipBox.Location = new System.Drawing.Point(78, 11);
+            this.ipBox.Name = "ipBox";
+            this.ipBox.ReadOnly = true;
+            this.ipBox.Size = new System.Drawing.Size(100, 20);
+            this.ipBox.TabIndex = 4;
+            this.ipBox.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
             // 
             // label3
             // 
@@ -118,29 +118,29 @@
             this.label5.TabIndex = 7;
             this.label5.Text = "Umidità";
             // 
-            // textBox3
+            // idBox
             // 
-            this.textBox3.Location = new System.Drawing.Point(418, 23);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.ReadOnly = true;
-            this.textBox3.Size = new System.Drawing.Size(34, 20);
-            this.textBox3.TabIndex = 8;
+            this.idBox.Location = new System.Drawing.Point(418, 23);
+            this.idBox.Name = "idBox";
+            this.idBox.ReadOnly = true;
+            this.idBox.Size = new System.Drawing.Size(34, 20);
+            this.idBox.TabIndex = 8;
             // 
-            // textBox4
+            // tempBox
             // 
-            this.textBox4.Location = new System.Drawing.Point(418, 56);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.ReadOnly = true;
-            this.textBox4.Size = new System.Drawing.Size(34, 20);
-            this.textBox4.TabIndex = 9;
+            this.tempBox.Location = new System.Drawing.Point(418, 56);
+            this.tempBox.Name = "tempBox";
+            this.tempBox.ReadOnly = true;
+            this.tempBox.Size = new System.Drawing.Size(34, 20);
+            this.tempBox.TabIndex = 9;
             // 
-            // textBox5
+            // humBox
             // 
-            this.textBox5.Location = new System.Drawing.Point(418, 95);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.ReadOnly = true;
-            this.textBox5.Size = new System.Drawing.Size(34, 20);
-            this.textBox5.TabIndex = 10;
+            this.humBox.Location = new System.Drawing.Point(418, 95);
+            this.humBox.Name = "humBox";
+            this.humBox.ReadOnly = true;
+            this.humBox.Size = new System.Drawing.Size(34, 20);
+            this.humBox.TabIndex = 10;
             // 
             // label6
             // 
@@ -169,34 +169,34 @@
             this.label8.TabIndex = 13;
             this.label8.Text = "Pressione";
             // 
-            // textBox6
+            // presBox
             // 
-            this.textBox6.Location = new System.Drawing.Point(418, 134);
-            this.textBox6.Name = "textBox6";
-            this.textBox6.ReadOnly = true;
-            this.textBox6.Size = new System.Drawing.Size(34, 20);
-            this.textBox6.TabIndex = 14;
+            this.presBox.Location = new System.Drawing.Point(418, 134);
+            this.presBox.Name = "presBox";
+            this.presBox.ReadOnly = true;
+            this.presBox.Size = new System.Drawing.Size(34, 20);
+            this.presBox.TabIndex = 14;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(620, 258);
-            this.Controls.Add(this.textBox6);
+            this.Controls.Add(this.presBox);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label6);
-            this.Controls.Add(this.textBox5);
-            this.Controls.Add(this.textBox4);
-            this.Controls.Add(this.textBox3);
+            this.Controls.Add(this.humBox);
+            this.Controls.Add(this.tempBox);
+            this.Controls.Add(this.idBox);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.textBox2);
+            this.Controls.Add(this.ipBox);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.portBox);
+            this.Controls.Add(this.connectBtn);
             this.HelpButton = true;
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
@@ -209,21 +209,21 @@
 
         #endregion
 
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Button connectBtn;
+        private System.Windows.Forms.TextBox portBox;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox ipBox;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.TextBox textBox4;
-        private System.Windows.Forms.TextBox textBox5;
+        private System.Windows.Forms.TextBox idBox;
+        private System.Windows.Forms.TextBox tempBox;
+        private System.Windows.Forms.TextBox humBox;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.TextBox textBox6;
+        private System.Windows.Forms.TextBox presBox;
     }
 }
 

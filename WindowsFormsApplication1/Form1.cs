@@ -31,7 +31,7 @@ namespace WindowsFormsApplication1
 
         private void button1_Click(object sender, EventArgs e)
         {
-            int port = int.Parse(textBox1.Text); ; //Variabile in cui verrà immesso il valore della porta aperta per la connessione
+            int port = int.Parse(portBox.Text); ; //Variabile in cui verrà immesso il valore della porta aperta per la connessione
             bool avanza = check_porta(port); //Una volta premuto il tasto, vengono effettuati dei controlli per vedere se il numero di porta scelto è valido
 
             Console.WriteLine(avanza);
@@ -59,7 +59,7 @@ namespace WindowsFormsApplication1
             string a4 = a3[0];
             //return a4;*/
             IPHostEntry ipServer = Dns.Resolve(Dns.GetHostName());
-            textBox2.Text = ipServer.AddressList[0].ToString();
+            ipBox.Text = ipServer.AddressList[0].ToString();
         }
 
         private void textBox2_TextChanged(object sender, EventArgs e)
@@ -107,19 +107,19 @@ namespace WindowsFormsApplication1
                 {
                     try //L'aggiornamento dei dati a video viene fatto in un try-catch per evitare che vengano scritti dei dati nulli e vada in crash il programma
                     {
-                        if (textBox3.InvokeRequired) //Viene utilizzato il metodo InvokeRequired in quanto il thread che va ad aggiornare le textBox non è lo stesso che le ha create, e quindi non ha un vero e proprio controllo su di esse
+                        if (idBox.InvokeRequired) //Viene utilizzato il metodo InvokeRequired in quanto il thread che va ad aggiornare le textBox non è lo stesso che le ha create, e quindi non ha un vero e proprio controllo su di esse
                         {
-                            textBox3.Invoke((MethodInvoker)delegate { textBox3.Text = Asynchronous.parametri[0]; });
-                            textBox4.Invoke((MethodInvoker)delegate { textBox4.Text = Asynchronous.parametri[1]; });
-                            textBox5.Invoke((MethodInvoker)delegate { textBox5.Text = Asynchronous.parametri[2]; });
-                            textBox6.Invoke((MethodInvoker)delegate { textBox6.Text = Asynchronous.parametri[3]; });
+                            idBox.Invoke((MethodInvoker)delegate { idBox.Text = Asynchronous.parametri[0]; });
+                            tempBox.Invoke((MethodInvoker)delegate { tempBox.Text = Asynchronous.parametri[1]; });
+                            humBox.Invoke((MethodInvoker)delegate { humBox.Text = Asynchronous.parametri[2]; });
+                            presBox.Invoke((MethodInvoker)delegate { presBox.Text = Asynchronous.parametri[3]; });
                         }
                         else
                         {
-                            textBox3.Text = Asynchronous.parametri[0];
-                            textBox4.Text = Asynchronous.parametri[1];
-                            textBox5.Text = Asynchronous.parametri[2];
-                            textBox6.Text = Asynchronous.parametri[3];
+                            idBox.Text = Asynchronous.parametri[0];
+                            tempBox.Text = Asynchronous.parametri[1];
+                            humBox.Text = Asynchronous.parametri[2];
+                            presBox.Text = Asynchronous.parametri[3];
                         }
                     }
                     catch (Exception e)
@@ -135,8 +135,8 @@ namespace WindowsFormsApplication1
         private bool check_porta(int porta) //Qui vengono fatti tutti i controlli di routine sulla porta scelta per far mettere in ascolto il server
         {
             int parsedValue;
-            porta = int.Parse(textBox1.Text);
-            if (!int.TryParse(textBox1.Text, out parsedValue)) //Controlliamo che il campo inserito sia numerico
+            porta = int.Parse(portBox.Text);
+            if (!int.TryParse(portBox.Text, out parsedValue)) //Controlliamo che il campo inserito sia numerico
             {
                 MessageBox.Show("Il campo porta deve essere numerico");
                 return false;
