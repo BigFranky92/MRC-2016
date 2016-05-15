@@ -15,8 +15,7 @@ using System.Net.NetworkInformation;
 using System.Net.Sockets;
 
 using System.Threading;
-
-
+using System.Data.SqlClient;
 
 namespace WindowsFormsApplication1
 {
@@ -60,7 +59,51 @@ namespace WindowsFormsApplication1
             //return a4;*/
             IPHostEntry ipServer = Dns.Resolve(Dns.GetHostName());
             ipBox.Text = ipServer.AddressList[0].ToString();
-        }
+
+            //Testa l'inserimento di dati nel DB
+            try
+            {
+                using (SqlConnection conn = new SqlConnection())
+                {
+                    // Crea la connection string per connettersi ad un db locale MySql chiamato dbsensori (già creato)
+                    // Trusted_Connection is used to denote the connection uses Windows Authentication
+                    //conn.ConnectionString = "root@localhost:3306;Database=dbsensori;Trusted_Connection=true";
+                    /*conn.ConnectionString =
+                    "Data Source=(local);" +
+                    "Initial Catalog=dbsensori;" +
+                    "User id=root;" +
+                    "Password=root;"; */
+                    conn.ConnectionString = "User ID = root; Password = root; Server = 127.0.0.1; Database = dbsensori";
+
+                    conn.Open();
+                    //Crea un comando per l'inserimento di una nuova riga con i dati ricevuti
+                    SqlCommand insertCommand = new SqlCommand("INSERT INTO dbsensori (id, temperatura, pressione, umidità) VALUES (@0, @1, @2, @3)", conn);
+
+                    // In the command, there are some parameters denoted by @, you can 
+                    // change their value on a condition, in my code they're hardcoded.
+
+                    insertCommand.Parameters.Add(new SqlParameter("0", 1));
+                    insertCommand.Parameters.Add(new SqlParameter("1", 10));
+                    insertCommand.Parameters.Add(new SqlParameter("2", 10));
+                    insertCommand.Parameters.Add(new SqlParameter("3", 10));
+
+                    // Execute the command, and print the values of the columns affected through
+                    // the command executed.
+
+                    Console.WriteLine("Commands executed! Total rows affected are " + insertCommand.ExecuteNonQuery());
+                    Console.WriteLine("Done! Press enter to move to the next step");
+                }
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine(ex.Message.ToString());
+            }
+            catch (SqlException ex)
+            {
+                Console.Write(ex.Message.ToString());
+            }
+
+            }
 
         private void textBox2_TextChanged(object sender, EventArgs e)
         {
@@ -130,7 +173,7 @@ namespace WindowsFormsApplication1
             }
         }
 
-
+       
 
         private bool check_porta(int porta) //Qui vengono fatti tutti i controlli di routine sulla porta scelta per far mettere in ascolto il server
         {
@@ -146,7 +189,7 @@ namespace WindowsFormsApplication1
                 MessageBox.Show("Numero di porta non valido, immettere un numero di porta > 0");
                 return false;
             }
-            else if (porta > 65535)// Ma anche minore di 2^16
+            else if (porta > 65535)// Ma anche minore di 2^16 -1
             {
                 MessageBox.Show("Numero di porta non valido, immettere un numero di porta minore di 65535");
                 return false;
