@@ -14,7 +14,8 @@ using System.Net;
 using System.Net.Sockets;
 
 using System.Threading;
-using System.Data.SqlClient;
+using MySql.Data.MySqlClient;
+//using System.Data.SqlClient;
 
 public class Asynchronous
 {
@@ -134,34 +135,17 @@ public class Asynchronous
                 Console.WriteLine(parametri[0]);
 
                 //Dopo aver ricevuto i dati, salvali in un DB: 
-                //cfr. http://www.codeproject.com/Articles/823854/How-to-connect-SQL-Database-to-your-Csharp-program
-                // Create the connection to the resource!
-                // This is the connection, that is established and
-                // will be available throughout this block.
-                using (SqlConnection conn = new SqlConnection())
-                {
-                    // Crea la connection string per connettersi ad un db locale MySql chiamato dbsensori (già creato)
-                    // Trusted_Connection is used to denote the connection uses Windows Authentication
-                    conn.ConnectionString = "root@localhost:3306;Database=dbsensori;Trusted_Connection=true";
-                    conn.Open();
-                    //Crea un comando per l'inserimento di una nuova riga con i dati ricevuti
-                    SqlCommand insertCommand = new SqlCommand("INSERT INTO dbsensori (ID, temperatura, pressione, umidità) VALUES (@0, @1, @2, @3)", conn);
 
-                    // In the command, there are some parameters denoted by @, you can 
-                    // change their value on a condition, in my code they're hardcoded.
+                MySqlCommand cmd = new MySqlCommand();
+                cmd.Connection = DataBase_Connection.Open_Connection_DB();
+                cmd.CommandText = "INSERT INTO misura( pressione, temperatura, umidita, idsensore) VALUES( ?pressione, ?temperatura, ?umidita, ?idsensore)";
+                cmd.Parameters.Add("?idsensore", MySqlDbType.Int32).Value = parametri[0];
+                cmd.Parameters.Add("?temperatura", MySqlDbType.Float).Value = parametri[1];
+                cmd.Parameters.Add("?pressione", MySqlDbType.Int32).Value = parametri[3];
+                cmd.Parameters.Add("?umidita", MySqlDbType.Int32).Value = parametri[2];
+                cmd.ExecuteNonQuery();
 
-                    insertCommand.Parameters.Add(new SqlParameter("0", parametri[0]));
-                    insertCommand.Parameters.Add(new SqlParameter("1", parametri[1]));
-                    insertCommand.Parameters.Add(new SqlParameter("2", parametri[2]));
-                    insertCommand.Parameters.Add(new SqlParameter("3", parametri[3]));
-                    
-                    // Execute the command, and print the values of the columns affected through
-                    // the command executed.
-
-                    Console.WriteLine("Commands executed! Total rows affected are " + insertCommand.ExecuteNonQuery());
-                    Console.WriteLine("Done! Press enter to move to the next step");
-                }
-
+                DataBase_Connection.SELECT();
                 // All the data has been read from the 
                 // client. Display it on the console.
                 Console.WriteLine("Read {0} bytes from socket. \n Data : {1}",

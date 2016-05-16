@@ -50,37 +50,15 @@ namespace WindowsFormsApplication1
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            
-            Open_Connection_DB();
+
+            DataBase_Connection.Open_Connection_DB();
 
             IPHostEntry ipServer = Dns.Resolve(Dns.GetHostName());
             ipBox.Text = ipServer.AddressList[0].ToString();
 
         }
 
-        private void Open_Connection_DB() {
-
-
-            //Testa l'inserimento di dati nel DB
-            MySql.Data.MySqlClient.MySqlConnection conn;
-            string myConnectionString;
-
-            myConnectionString = "server=localhost;uid=root;" +
-                "pwd=000000;database=mrc_db;";
-
-            try
-            {
-                conn = new MySql.Data.MySqlClient.MySqlConnection();
-                conn.ConnectionString = myConnectionString;
-                conn.Open();
-            }
-            catch (MySql.Data.MySqlClient.MySqlException ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-
-
-        }
+        
 
         private void textBox2_TextChanged(object sender, EventArgs e)
         {
