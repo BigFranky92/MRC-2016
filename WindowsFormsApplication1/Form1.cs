@@ -15,7 +15,7 @@ using System.Net.NetworkInformation;
 using System.Net.Sockets;
 
 using System.Threading;
-using System.Data.SqlClient;
+//using System.Data.SqlClient;
 
 namespace WindowsFormsApplication1
 {
@@ -43,67 +43,44 @@ namespace WindowsFormsApplication1
                 workerThread.Start(port_obj);
                 Console.WriteLine("main thread: Starting StartListening...");
             }
+
+
+
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            /*string url = "http://checkip.dyndns.org";                               //Questo codice ci è servito per mostrare a video l'indirizzo IP esterno della centrale, ma non siamo ancora riusciti ad aprire la porta anche sull'indirizzo IP esterno
-            System.Net.WebRequest req = System.Net.WebRequest.Create(url);
-            System.Net.WebResponse resp = req.GetResponse();
-            System.IO.StreamReader sr = new System.IO.StreamReader(resp.GetResponseStream());
-            string response = sr.ReadToEnd().Trim();
-            string[] a = response.Split(':');
-            string a2 = a[1].Substring(1);
-            string[] a3 = a2.Split('<');
-            string a4 = a3[0];
-            //return a4;*/
+            
+            Open_Connection_DB();
+
             IPHostEntry ipServer = Dns.Resolve(Dns.GetHostName());
             ipBox.Text = ipServer.AddressList[0].ToString();
 
+        }
+
+        private void Open_Connection_DB() {
+
+
             //Testa l'inserimento di dati nel DB
+            MySql.Data.MySqlClient.MySqlConnection conn;
+            string myConnectionString;
+
+            myConnectionString = "server=localhost;uid=root;" +
+                "pwd=000000;database=mrc_db;";
+
             try
             {
-                using (SqlConnection conn = new SqlConnection())
-                {
-                    // Crea la connection string per connettersi ad un db locale MySql chiamato dbsensori (già creato)
-                    // Trusted_Connection is used to denote the connection uses Windows Authentication
-                    //conn.ConnectionString = "root@localhost:3306;Database=dbsensori;Trusted_Connection=true";
-                    /*conn.ConnectionString =
-                    "Data Source=(local);" +
-                    "Initial Catalog=dbsensori;" +
-                    "User id=root;" +
-                    "Password=root;"; */
-                    conn.ConnectionString = "User ID = root; Password = root; Server = 127.0.0.1; Database = dbsensori";
-
-                    conn.Open();
-                    //Crea un comando per l'inserimento di una nuova riga con i dati ricevuti
-                    SqlCommand insertCommand = new SqlCommand("INSERT INTO dbsensori (id, temperatura, pressione, umidità) VALUES (@0, @1, @2, @3)", conn);
-
-                    // In the command, there are some parameters denoted by @, you can 
-                    // change their value on a condition, in my code they're hardcoded.
-
-                    insertCommand.Parameters.Add(new SqlParameter("0", 1));
-                    insertCommand.Parameters.Add(new SqlParameter("1", 10));
-                    insertCommand.Parameters.Add(new SqlParameter("2", 10));
-                    insertCommand.Parameters.Add(new SqlParameter("3", 10));
-
-                    // Execute the command, and print the values of the columns affected through
-                    // the command executed.
-
-                    Console.WriteLine("Commands executed! Total rows affected are " + insertCommand.ExecuteNonQuery());
-                    Console.WriteLine("Done! Press enter to move to the next step");
-                }
+                conn = new MySql.Data.MySqlClient.MySqlConnection();
+                conn.ConnectionString = myConnectionString;
+                conn.Open();
             }
-            catch (ArgumentException ex)
+            catch (MySql.Data.MySqlClient.MySqlException ex)
             {
-                Console.WriteLine(ex.Message.ToString());
-            }
-            catch (SqlException ex)
-            {
-                Console.Write(ex.Message.ToString());
+                MessageBox.Show(ex.Message);
             }
 
-            }
+
+        }
 
         private void textBox2_TextChanged(object sender, EventArgs e)
         {
