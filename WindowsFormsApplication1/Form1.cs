@@ -30,8 +30,10 @@ namespace WindowsFormsApplication1
         private void button1_Click(object sender, EventArgs e)
         {
             int port = int.Parse(portBox.Text); ; //Variabile in cui verrà immesso il valore della porta aperta per la connessione
-            bool avanza = check_porta(port); //Una volta premuto il tasto, vengono effettuati dei controlli per vedere se il numero di porta scelto è valido
 
+            
+            bool avanza = check_porta(port); //Una volta premuto il tasto, vengono effettuati dei controlli per vedere se il numero di porta scelto è valido
+                    
             Console.WriteLine(avanza);
             if (avanza == true)
             {
@@ -122,26 +124,27 @@ namespace WindowsFormsApplication1
 
         private bool check_porta(int porta) //Qui vengono fatti tutti i controlli di routine sulla porta scelta per far mettere in ascolto il server
         {
-            int parsedValue;
-            porta = int.Parse(portBox.Text);
-            if (!int.TryParse(portBox.Text, out parsedValue)) //Controlliamo che il campo inserito sia numerico
-            {
-                MessageBox.Show("Il campo porta deve essere numerico");
-                return false;
-            }
-            else if (porta < 0) //Che rientri nel range delle porte TCP/IP, quindi positivo
-            {
-                MessageBox.Show("Numero di porta non valido, immettere un numero di porta > 0");
-                return false;
-            }
-            else if (porta > 65535)//Ma anche minore di 2^16 -1
-            {
-                MessageBox.Show("Numero di porta non valido, immettere un numero di porta minore di 65535");
-                return false;
-            }
-    
-            else return true;
             
+                int parsedValue;
+                porta = int.Parse(portBox.Text);
+                if (!int.TryParse(portBox.Text, out parsedValue)) //Controlliamo che il campo inserito sia numerico
+                {
+                    MessageBox.Show("Il campo porta deve essere numerico");
+                    return false;
+                }
+                else if (porta < 0) //Che rientri nel range delle porte TCP/IP, quindi positivo
+                {
+                    MessageBox.Show("Numero di porta non valido, immettere un numero di porta > 0");
+                    return false;
+                }
+                else if (porta > 65535)//Ma anche minore di 2^16 -1
+                {
+                    MessageBox.Show("Numero di porta non valido, immettere un numero di porta minore di 65535");
+                    return false;
+                }
+
+                else return true;         
+
         }
     }
 }
