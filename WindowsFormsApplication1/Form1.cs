@@ -15,7 +15,6 @@ using System.Net.NetworkInformation;
 using System.Net.Sockets;
 
 using System.Threading;
-//using System.Data.SqlClient;
 
 namespace WindowsFormsApplication1
 {
@@ -44,8 +43,6 @@ namespace WindowsFormsApplication1
                 Console.WriteLine("main thread: Starting StartListening...");
             }
 
-
-
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -57,8 +54,7 @@ namespace WindowsFormsApplication1
             ipBox.Text = ipServer.AddressList[0].ToString();
 
         }
-
-        
+      
 
         private void textBox2_TextChanged(object sender, EventArgs e)
         {
@@ -91,11 +87,7 @@ namespace WindowsFormsApplication1
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-
         }
-
-
-
 
         private void aggiorna_video() //Questa è la funzione per aggiornare il video in tempo reale utilizzata dal thread
         {
@@ -128,8 +120,6 @@ namespace WindowsFormsApplication1
             }
         }
 
-       
-
         private bool check_porta(int porta) //Qui vengono fatti tutti i controlli di routine sulla porta scelta per far mettere in ascolto il server
         {
             int parsedValue;
@@ -144,26 +134,14 @@ namespace WindowsFormsApplication1
                 MessageBox.Show("Numero di porta non valido, immettere un numero di porta > 0");
                 return false;
             }
-            else if (porta > 65535)// Ma anche minore di 2^16 -1
+            else if (porta > 65535)//Ma anche minore di 2^16 -1
             {
                 MessageBox.Show("Numero di porta non valido, immettere un numero di porta minore di 65535");
                 return false;
             }
-            /*IPHostEntry ipServer = Dns.Resolve(Dns.GetHostName());
-            /*try
-            {
-                TcpListener tcpListener = new TcpListener(ipServer.AddressList[0], porta);
-                tcpListener.Start();
-                return true;
-            }
-            catch (SocketException ex)
-            {
-                MessageBox.Show(ex.Message, "kaboom");
-                return false;
-            }*/
+    
             else return true;
             
-
         }
     }
 }

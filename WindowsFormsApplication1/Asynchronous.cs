@@ -15,7 +15,6 @@ using System.Net.Sockets;
 
 using System.Threading;
 using MySql.Data.MySqlClient;
-//using System.Data.SqlClient;
 
 public class Asynchronous
 {
@@ -79,7 +78,6 @@ public class Asynchronous
 
     }
 
-
     public static bool SocketConnected(Socket s)
     {
         bool part1 = s.Poll(1000, SelectMode.SelectRead);
@@ -135,10 +133,9 @@ public class Asynchronous
                 Console.WriteLine(parametri[0]);
 
                 //Dopo aver ricevuto i dati, salvali in un DB: 
-
                 MySqlCommand cmd = new MySqlCommand();
                 cmd.Connection = DataBase_Connection.Open_Connection_DB();
-                cmd.CommandText = "INSERT INTO misura( pressione, temperatura, umidita, idsensore) VALUES( ?pressione, ?temperatura, ?umidita, ?idsensore)";
+                cmd.CommandText = "INSERT INTO misura(pressione, temperatura, umidita, idsensore) VALUES(?pressione, ?temperatura, ?umidita, ?idsensore)";
                 cmd.Parameters.Add("?idsensore", MySqlDbType.Int32).Value = parametri[0];
                 cmd.Parameters.Add("?temperatura", MySqlDbType.Float).Value = parametri[1];
                 cmd.Parameters.Add("?pressione", MySqlDbType.Int32).Value = parametri[3];
