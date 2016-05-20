@@ -1,5 +1,6 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
+using System.IO;
 using System.Windows.Forms;
 
 public class DataBase_Connection

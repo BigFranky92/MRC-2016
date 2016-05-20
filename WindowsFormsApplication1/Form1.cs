@@ -15,6 +15,7 @@ using System.Net.NetworkInformation;
 using System.Net.Sockets;
 
 using System.Threading;
+using System.IO;
 //using System.Data.SqlClient;
 
 namespace WindowsFormsApplication1
@@ -23,6 +24,10 @@ namespace WindowsFormsApplication1
     public partial class Form1 : Form
     {
         public delegate void aggiorna_videoCallBack();
+
+        private static FileStream log;
+        private static StreamWriter sw;
+
         public Form1()
         {
             InitializeComponent();
@@ -41,7 +46,7 @@ namespace WindowsFormsApplication1
                 Thread workerThread = new Thread(Asynchronous.StartListening); //Ed il secondo thread per aprire la socket e mettersi in ascolto
                 updateThread.Start();
                 workerThread.Start(port_obj);
-                Console.WriteLine("main thread: Starting StartListening...");
+                Console.WriteLine("Main thread: Starting StartListening...");
             }
 
 
@@ -56,9 +61,13 @@ namespace WindowsFormsApplication1
             IPHostEntry ipServer = Dns.Resolve(Dns.GetHostName());
             ipBox.Text = ipServer.AddressList[0].ToString();
 
+            log = new FileStream("MeasureLog.txt", FileMode.Append);
+            sw = new StreamWriter(log);
+            Console.SetOut(sw);
+            Console.WriteLine("prova scrittura su file");
         }
 
-        
+
 
         private void textBox2_TextChanged(object sender, EventArgs e)
         {
