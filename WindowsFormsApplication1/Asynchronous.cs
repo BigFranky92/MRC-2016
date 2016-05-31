@@ -132,7 +132,7 @@ public class Asynchronous
                 new_parameters = true;
                 Console.WriteLine(parametri[0]);
                 //Ricevuti i dati, distingue il tipo di pacchetto (il campo Type è il primo campo del pacchetto)
-                if(parametri[0]==0) //Ho ricevuto dati ambientali
+                if(parametri[0]=="0") //Ho ricevuto dati ambientali
                 {
                     //Dopo aver ricevuto i dati, salvali in un DB: 
                     MySqlCommand cmd = new MySqlCommand();
@@ -144,7 +144,7 @@ public class Asynchronous
                     cmd.Parameters.Add("?umidita", MySqlDbType.Int32).Value = parametri[4];
                     cmd.ExecuteNonQuery();
                 }     
-                else if(parametri[0]==1) //Ho ricevuto dati relativi all'attività fisica
+                else if(parametri[0]=="1") //Ho ricevuto dati relativi all'attività fisica
                 {
                     //Dopo aver ricevuto i dati, salvali in un DB: 
                     MySqlCommand cmd = new MySqlCommand();
