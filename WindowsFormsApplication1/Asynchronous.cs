@@ -131,16 +131,29 @@ public class Asynchronous
                 parametri = parametri_app[0].Split('#');
                 new_parameters = true;
                 Console.WriteLine(parametri[0]);
-
-                //Dopo aver ricevuto i dati, salvali in un DB: 
-                MySqlCommand cmd = new MySqlCommand();
-                cmd.Connection = DataBase_Connection.Open_Connection_DB();
-                cmd.CommandText = "INSERT INTO misura(pressione, temperatura, umidita, idsensore) VALUES(?pressione, ?temperatura, ?umidita, ?idsensore)";
-                cmd.Parameters.Add("?idsensore", MySqlDbType.Int32).Value = parametri[0];
-                cmd.Parameters.Add("?temperatura", MySqlDbType.Float).Value = parametri[1];
-                cmd.Parameters.Add("?pressione", MySqlDbType.Int32).Value = parametri[3];
-                cmd.Parameters.Add("?umidita", MySqlDbType.Int32).Value = parametri[2];
-                cmd.ExecuteNonQuery();
+                //Ricevuti i dati, distingue il tipo di pacchetto (il campo Type è il primo campo del pacchetto)
+                if(parametri[0]==0) //Ho ricevuto dati ambientali
+                {
+                    //Dopo aver ricevuto i dati, salvali in un DB: 
+                    MySqlCommand cmd = new MySqlCommand();
+                    cmd.Connection = DataBase_Connection.Open_Connection_DB();
+                    cmd.CommandText = "INSERT INTO misura_ambientale(pressione, temperatura, umidita, idsensore) VALUES(?pressione, ?temperatura, ?umidita, ?idsensore)";
+                    cmd.Parameters.Add("?idsensore", MySqlDbType.Int32).Value = parametri[1];
+                    cmd.Parameters.Add("?temperatura", MySqlDbType.Float).Value = parametri[2];
+                    cmd.Parameters.Add("?pressione", MySqlDbType.Int32).Value = parametri[3];
+                    cmd.Parameters.Add("?umidita", MySqlDbType.Int32).Value = parametri[4];
+                    cmd.ExecuteNonQuery();
+                }     
+                else if(parametri[0]==1) //Ho ricevuto dati relativi all'attività fisica
+                {
+                    //Dopo aver ricevuto i dati, salvali in un DB: 
+                    MySqlCommand cmd = new MySqlCommand();
+                    cmd.Connection = DataBase_Connection.Open_Connection_DB();
+                    cmd.CommandText = "INSERT INTO misura_actigrafo(indice_attività, Actigrafo_idactigrafo) VALUES(?indice_attività, ?id_actigrafo)";
+                    cmd.Parameters.Add("?id_actigrafo", MySqlDbType.Float).Value = parametri[1];
+                    cmd.Parameters.Add("?indice_attività", MySqlDbType.Int32).Value = parametri[2];
+                    cmd.ExecuteNonQuery();
+                }
 
                 DataBase_Connection.SELECT();
                 // All the data has been read from the 

@@ -43,6 +43,10 @@
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.presBox = new System.Windows.Forms.TextBox();
+            this.personBox = new System.Windows.Forms.TextBox();
+            this.personLabel = new System.Windows.Forms.Label();
+            this.activityIndex = new System.Windows.Forms.TextBox();
+            this.activityLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // connectBtn
@@ -94,7 +98,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(311, 23);
+            this.label3.Location = new System.Drawing.Point(340, 11);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(18, 13);
             this.label3.TabIndex = 5;
@@ -103,7 +107,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(311, 56);
+            this.label4.Location = new System.Drawing.Point(340, 44);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(67, 13);
             this.label4.TabIndex = 6;
@@ -112,7 +116,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(311, 95);
+            this.label5.Location = new System.Drawing.Point(340, 83);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(42, 13);
             this.label5.TabIndex = 7;
@@ -120,7 +124,7 @@
             // 
             // idBox
             // 
-            this.idBox.Location = new System.Drawing.Point(418, 23);
+            this.idBox.Location = new System.Drawing.Point(447, 11);
             this.idBox.Name = "idBox";
             this.idBox.ReadOnly = true;
             this.idBox.Size = new System.Drawing.Size(34, 20);
@@ -128,7 +132,7 @@
             // 
             // tempBox
             // 
-            this.tempBox.Location = new System.Drawing.Point(418, 56);
+            this.tempBox.Location = new System.Drawing.Point(447, 44);
             this.tempBox.Name = "tempBox";
             this.tempBox.ReadOnly = true;
             this.tempBox.Size = new System.Drawing.Size(34, 20);
@@ -136,7 +140,7 @@
             // 
             // humBox
             // 
-            this.humBox.Location = new System.Drawing.Point(418, 95);
+            this.humBox.Location = new System.Drawing.Point(447, 83);
             this.humBox.Name = "humBox";
             this.humBox.ReadOnly = true;
             this.humBox.Size = new System.Drawing.Size(34, 20);
@@ -145,7 +149,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(475, 63);
+            this.label6.Location = new System.Drawing.Point(504, 51);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(18, 13);
             this.label6.TabIndex = 11;
@@ -154,7 +158,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(478, 102);
+            this.label7.Location = new System.Drawing.Point(507, 90);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(15, 13);
             this.label7.TabIndex = 12;
@@ -163,7 +167,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(311, 137);
+            this.label8.Location = new System.Drawing.Point(340, 120);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(53, 13);
             this.label8.TabIndex = 13;
@@ -171,17 +175,55 @@
             // 
             // presBox
             // 
-            this.presBox.Location = new System.Drawing.Point(418, 134);
+            this.presBox.Location = new System.Drawing.Point(447, 117);
             this.presBox.Name = "presBox";
             this.presBox.ReadOnly = true;
             this.presBox.Size = new System.Drawing.Size(34, 20);
             this.presBox.TabIndex = 14;
+            // 
+            // personBox
+            // 
+            this.personBox.Location = new System.Drawing.Point(447, 149);
+            this.personBox.Name = "personBox";
+            this.personBox.ReadOnly = true;
+            this.personBox.Size = new System.Drawing.Size(34, 20);
+            this.personBox.TabIndex = 16;
+            // 
+            // personLabel
+            // 
+            this.personLabel.AutoSize = true;
+            this.personLabel.Location = new System.Drawing.Point(340, 152);
+            this.personLabel.Name = "personLabel";
+            this.personLabel.Size = new System.Drawing.Size(60, 13);
+            this.personLabel.TabIndex = 15;
+            this.personLabel.Text = "ID Persona";
+            // 
+            // activityIndex
+            // 
+            this.activityIndex.Location = new System.Drawing.Point(447, 182);
+            this.activityIndex.Name = "activityIndex";
+            this.activityIndex.ReadOnly = true;
+            this.activityIndex.Size = new System.Drawing.Size(34, 20);
+            this.activityIndex.TabIndex = 18;
+            // 
+            // activityLabel
+            // 
+            this.activityLabel.AutoSize = true;
+            this.activityLabel.Location = new System.Drawing.Point(340, 185);
+            this.activityLabel.Name = "activityLabel";
+            this.activityLabel.Size = new System.Drawing.Size(66, 13);
+            this.activityLabel.TabIndex = 17;
+            this.activityLabel.Text = "Attività fisica";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(620, 258);
+            this.Controls.Add(this.activityIndex);
+            this.Controls.Add(this.activityLabel);
+            this.Controls.Add(this.personBox);
+            this.Controls.Add(this.personLabel);
             this.Controls.Add(this.presBox);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label7);
@@ -224,6 +266,10 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TextBox presBox;
+        private System.Windows.Forms.TextBox personBox;
+        private System.Windows.Forms.Label personLabel;
+        private System.Windows.Forms.TextBox activityIndex;
+        private System.Windows.Forms.Label activityLabel;
     }
 }
 
