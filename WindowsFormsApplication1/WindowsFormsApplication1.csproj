@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="..\DBConnection.cs" />
     <Compile Include="Asynchronous.cs" />
+    <Compile Include="EmailSender.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>

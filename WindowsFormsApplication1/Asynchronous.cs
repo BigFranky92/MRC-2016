@@ -15,12 +15,14 @@ using System.Net.Sockets;
 
 using System.Threading;
 using MySql.Data.MySqlClient;
+using WindowsFormsApplication1;
 
 public class Asynchronous
 {
     public static string[] parametri;
     public static string[] parametri_app;
-    public static bool new_parameters = false;
+    public static bool new_parameters_env = false; //Segnala la presenza di nuovi dati ambientali
+    public static bool new_parameters_activity = false; //Segnala la presenza di dati relativi all'attività fisica
 
     // Thread signal.
     public static ManualResetEvent allDone = new ManualResetEvent(false);
@@ -133,10 +135,35 @@ public class Asynchronous
                 //Ricevuti i dati, distingue il tipo di pacchetto (il campo Type è il primo campo del pacchetto)
                 if(parametri[0]=="0") //Ho ricevuto dati ambientali
                 {
-                    new_parameters = true;
+                    new_parameters_env = true;
                     //Dopo aver ricevuto i dati, salvali in un DB: 
                     MySqlCommand cmd = new MySqlCommand();
+
+                    //Controlla il superamento delle soglie e invia email in caso d'errore
+                    //(l'aggiornamento del DB è fatto da un trigger)
+                    int minUmid=0, maxUmid=0, minPres=0, maxPres=0;
+                    float minTemp=0, maxTemp=0;
                     cmd.Connection = DataBase_Connection.Open_Connection_DB();
+                    cmd.CommandText = "SELECT * from soglia";
+                    MySqlDataReader reader = cmd.ExecuteReader();
+                    //Leggi soglie
+                    while (reader.Read())
+                    {
+                        minUmid = reader.GetInt32("minUmid");
+                        maxUmid = reader.GetInt32("maxUmid");
+                        minPres = reader.GetInt32("minPres");
+                        maxPres = reader.GetInt32("maxPres");
+                        minTemp = reader.GetFloat("minTemp");
+                        maxTemp = reader.GetFloat("maxTemp");
+                    }
+                    //OTTIENI L'INDIRIZZO EMAIL DEL TITOLARE DELLA PALESTRA
+
+                    //Invia mail
+                    if (float.Parse(parametri[2])>maxTemp || float.Parse(parametri[2]) <minTemp || int.Parse(parametri[3])<minPres || int.Parse(parametri[3])>maxPres || int.Parse(parametri[4])<minUmid || int.Parse(parametri[4])>maxUmid)
+                    {
+                        EmailSender.sendEmail(float.Parse(parametri[2]), int.Parse(parametri[3]), int.Parse(parametri[4]), "fabiopalumbo@msn");
+                    }
+
                     cmd.CommandText = "INSERT INTO misura_ambientale(pressione, temperatura, umidita, Idsensore_ambientale) VALUES(?pressione, ?temperatura, ?umidita, ?idsensore)";
                     cmd.Parameters.Add("?idsensore", MySqlDbType.Int32).Value = parametri[1];
                     cmd.Parameters.Add("?temperatura", MySqlDbType.Float).Value = parametri[2];
@@ -146,6 +173,7 @@ public class Asynchronous
                 }     
                 else if(parametri[0]=="1") //Ho ricevuto dati relativi all'attività fisica
                 {
+                    new_parameters_activity = true;
                     //Dopo aver ricevuto i dati, salvali in un DB: 
                     MySqlCommand cmd = new MySqlCommand();
                     cmd.Connection = DataBase_Connection.Open_Connection_DB();

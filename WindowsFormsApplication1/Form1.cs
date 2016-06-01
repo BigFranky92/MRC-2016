@@ -67,17 +67,6 @@ namespace WindowsFormsApplication1
             Console.WriteLine("prova scrittura su file");
         }
 
-
-
-        private void textBox2_TextChanged(object sender, EventArgs e)
-        {
-        }
-
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-        }
-
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (e.CloseReason == CloseReason.UserClosing)
@@ -106,23 +95,42 @@ namespace WindowsFormsApplication1
         {
             while (true) //Rimane in polling fino a quando non viene alzato il flag new_parameters e quindi ci sono nuovi dati da mostrare a video
             {
-                if (Asynchronous.new_parameters)
+                if (Asynchronous.new_parameters_env)
                 {
                     try //L'aggiornamento dei dati a video viene fatto in un try-catch per evitare che vengano scritti dei dati nulli e vada in crash il programma
                     {
                         if (idBox.InvokeRequired) //Viene utilizzato il metodo InvokeRequired in quanto il thread che va ad aggiornare le textBox non è lo stesso che le ha create, e quindi non ha un vero e proprio controllo su di esse
                         {
-                            idBox.Invoke((MethodInvoker)delegate { idBox.Text = Asynchronous.parametri[0]; });
-                            tempBox.Invoke((MethodInvoker)delegate { tempBox.Text = Asynchronous.parametri[1]; });
-                            humBox.Invoke((MethodInvoker)delegate { humBox.Text = Asynchronous.parametri[2]; });
-                            presBox.Invoke((MethodInvoker)delegate { presBox.Text = Asynchronous.parametri[3]; });
+                            idBox.Invoke((MethodInvoker)delegate { idBox.Text = Asynchronous.parametri[1]; });
+                            tempBox.Invoke((MethodInvoker)delegate { tempBox.Text = Asynchronous.parametri[2]; });
+                            humBox.Invoke((MethodInvoker)delegate { humBox.Text = Asynchronous.parametri[3]; });
+                            presBox.Invoke((MethodInvoker)delegate { presBox.Text = Asynchronous.parametri[4]; });
                         }
                         else
                         {
-                            idBox.Text = Asynchronous.parametri[0];
-                            tempBox.Text = Asynchronous.parametri[1];
-                            humBox.Text = Asynchronous.parametri[2];
-                            presBox.Text = Asynchronous.parametri[3];
+                            idBox.Text = Asynchronous.parametri[1];
+                            tempBox.Text = Asynchronous.parametri[2];
+                            humBox.Text = Asynchronous.parametri[3];
+                            presBox.Text = Asynchronous.parametri[4];
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Console.Write(e.ToString());
+                    }
+                }
+                else if (Asynchronous.new_parameters_activity)
+                {
+                    try //L'aggiornamento dei dati a video viene fatto in un try-catch per evitare che vengano scritti dei dati nulli e vada in crash il programma
+                    {
+                        if (idBox.InvokeRequired) //Viene utilizzato il metodo InvokeRequired in quanto il thread che va ad aggiornare le textBox non è lo stesso che le ha create, e quindi non ha un vero e proprio controllo su di esse
+                        {
+                            personBox.Invoke((MethodInvoker)delegate { personBox.Text = Asynchronous.parametri[5]; });
+                            activityIndex.Invoke((MethodInvoker)delegate { activityIndex.Text = Asynchronous.parametri[6]; });                        }
+                        else
+                        {
+                            personBox.Text = Asynchronous.parametri[5];
+                            activityIndex.Text = Asynchronous.parametri[6];
                         }
                     }
                     catch (Exception e)

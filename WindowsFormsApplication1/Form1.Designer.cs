@@ -66,7 +66,6 @@
             this.portBox.Name = "portBox";
             this.portBox.Size = new System.Drawing.Size(100, 20);
             this.portBox.TabIndex = 1;
-            this.portBox.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // label1
             // 
@@ -93,7 +92,6 @@
             this.ipBox.ReadOnly = true;
             this.ipBox.Size = new System.Drawing.Size(100, 20);
             this.ipBox.TabIndex = 4;
-            this.ipBox.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
             // 
             // label3
             // 
