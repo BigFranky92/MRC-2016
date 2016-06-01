@@ -37,13 +37,13 @@ public class DataBase_Connection
     public static void SELECT ()
     {
         MySqlCommand cmd = conn.CreateCommand();
-        cmd.CommandText = "SELECT * from misura" ;
+        cmd.CommandText = "SELECT * from misura_ambientale" ;
 
         MySqlDataReader reader = cmd.ExecuteReader();
 
         while (reader.Read())
         {
-            Console.Write(reader.GetInt32("idmisure")+" ");
+            Console.Write(reader.GetInt32("idmisura")+" ");
             Console.Write(reader.GetDateTime("timestamp").ToString() + " ");
             Console.Write(reader.GetInt32("pressione") + " ");
             Console.WriteLine(reader.GetFloat("temperatura") + " ");

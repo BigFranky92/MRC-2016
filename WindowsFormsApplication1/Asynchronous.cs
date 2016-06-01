@@ -129,15 +129,15 @@ public class Asynchronous
             {
                 parametri_app = content.Split('<');
                 parametri = parametri_app[0].Split('#');
-                new_parameters = true;
                 Console.WriteLine(parametri[0]);
                 //Ricevuti i dati, distingue il tipo di pacchetto (il campo Type è il primo campo del pacchetto)
                 if(parametri[0]=="0") //Ho ricevuto dati ambientali
                 {
+                    new_parameters = true;
                     //Dopo aver ricevuto i dati, salvali in un DB: 
                     MySqlCommand cmd = new MySqlCommand();
                     cmd.Connection = DataBase_Connection.Open_Connection_DB();
-                    cmd.CommandText = "INSERT INTO misura_ambientale(pressione, temperatura, umidita, idsensore) VALUES(?pressione, ?temperatura, ?umidita, ?idsensore)";
+                    cmd.CommandText = "INSERT INTO misura_ambientale(pressione, temperatura, umidita, Idsensore_ambientale) VALUES(?pressione, ?temperatura, ?umidita, ?idsensore)";
                     cmd.Parameters.Add("?idsensore", MySqlDbType.Int32).Value = parametri[1];
                     cmd.Parameters.Add("?temperatura", MySqlDbType.Float).Value = parametri[2];
                     cmd.Parameters.Add("?pressione", MySqlDbType.Int32).Value = parametri[3];
