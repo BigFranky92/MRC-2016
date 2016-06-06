@@ -19,6 +19,7 @@ using WindowsFormsApplication1;
 
 public class Asynchronous
 {
+    public static string data = null;
     public static string[] parametri;
     public static string[] parametri_app;
     public static bool new_parameters_env = false; //Segnala la presenza di nuovi dati ambientali
@@ -29,7 +30,7 @@ public class Asynchronous
 
     public static void StartListening(object port)
     {
-        bool ris;
+        /* bool ris;
         // Data buffer for incoming data.
         byte[] bytes = new Byte[1024];
 
@@ -77,7 +78,128 @@ public class Asynchronous
 
         Console.WriteLine("\nPress ENTER to continue...");
         Console.Read();
+        
+    */
+        // Data buffer for incoming data.
+        byte[] bytes = new Byte[1024];
 
+        // Establish the local endpoint for the socket.
+        // Dns.GetHostName returns the name of the 
+        // host running the application.
+        IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
+        IPAddress ipAddress = ipHostInfo.AddressList[0];
+
+        Console.WriteLine(ipAddress.ToString());
+        int popo = (int)port;
+        IPEndPoint localEndPoint = new IPEndPoint(ipAddress, popo);
+
+
+        // Create a TCP/IP socket.
+        Socket listener = new Socket(AddressFamily.InterNetwork,
+            SocketType.Stream, ProtocolType.Tcp);
+
+        // Bind the socket to the local endpoint and 
+        // listen for incoming connections.
+        try
+        {
+            listener.Bind(localEndPoint);
+            listener.Listen(10);
+
+            // Start listening for connections.
+            while (true)
+            {
+                Console.WriteLine("Waiting for a connection...");
+                // Program is suspended while waiting for an incoming connection.
+               Socket handler = listener.Accept();
+               //handler.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.KeepAlive, true);
+               data = null;
+
+                // An incoming connection needs to be processed.
+                while (true)
+                {
+                    bytes = new byte[1024];
+                    int bytesRec = handler.Receive(bytes);
+                    data += Encoding.ASCII.GetString(bytes, 0, bytesRec);
+                    if (data.IndexOf("<EOF>") > -1)
+                    {
+                        break;
+                    }
+                }
+
+                parametri_app = data.Split('<');
+                parametri = parametri_app[0].Split('#');
+                Console.WriteLine(parametri[0]);
+                //Ricevuti i dati, distingue il tipo di pacchetto (il campo Type è il primo campo del pacchetto)
+                if (parametri[0] == "0") //Ho ricevuto dati ambientali
+                {
+                    //new_parameters_env = true;
+                    //Dopo aver ricevuto i dati, salvali in un DB: 
+                    MySqlCommand cmd = new MySqlCommand();
+
+                    //Controlla il superamento delle soglie e invia email in caso d'errore
+                    //(l'aggiornamento del DB è fatto da un trigger)
+                    int minUmid = 0, maxUmid = 0, minPres = 0, maxPres = 0;
+                    float minTemp = 0, maxTemp = 0;
+                   // cmd.Connection = DataBase_Connection.Open_Connection_DB();
+                    /* cmd.CommandText = "SELECT * from soglia";
+                    MySqlDataReader reader = cmd.ExecuteReader();
+                    //Leggi soglie
+                    while (reader.Read())
+                    {
+                        minUmid = reader.GetInt32("minUmid");
+                        maxUmid = reader.GetInt32("maxUmid");
+                        minPres = reader.GetInt32("minPress");
+                        maxPres = reader.GetInt32("maxPress");
+                        minTemp = reader.GetFloat("minTemp");
+                        maxTemp = reader.GetFloat("maxTemp");
+                    }
+                    reader.Close(); */
+                    //OTTIENI L'INDIRIZZO EMAIL DEL TITOLARE DELLA PALESTRA
+
+                    //Invia mail
+                    /* if (float.Parse(parametri[2])>maxTemp || float.Parse(parametri[2]) <minTemp || int.Parse(parametri[3])<minPres || int.Parse(parametri[3])>maxPres || int.Parse(parametri[4])<minUmid || int.Parse(parametri[4])>maxUmid)
+                    {
+                        EmailSender.sendEmail(float.Parse(parametri[2]), int.Parse(parametri[3]), int.Parse(parametri[4]), "fabiopalumbo@msn");
+                    } */
+
+                    /*cmd.CommandText = "INSERT INTO misura_ambientale(pressione, temperatura, umidita, Idsensore_ambientale) VALUES(?pressione, ?temperatura, ?umidita, ?idsensore)";
+                    cmd.Parameters.Add("?idsensore", MySqlDbType.VarChar).Value = parametri[1];
+                    cmd.Parameters.Add("?temperatura", MySqlDbType.Float).Value = parametri[2];
+                    cmd.Parameters.Add("?pressione", MySqlDbType.Int32).Value = parametri[3];
+                    cmd.Parameters.Add("?umidita", MySqlDbType.Int32).Value = parametri[4];
+                    cmd.ExecuteNonQuery();*/
+                }
+                else if (parametri[0] == "1") //Ho ricevuto dati relativi all'attività fisica
+                {
+                    new_parameters_activity = true;
+                    //Dopo aver ricevuto i dati, salvali in un DB: 
+                    MySqlCommand cmd = new MySqlCommand();
+                    cmd.Connection = DataBase_Connection.Open_Connection_DB();
+                    cmd.CommandText = "INSERT INTO misura_actigrafo(indice_attività, Actigrafo_idactigrafo) VALUES(?indice_attività, ?id_actigrafo)";
+                    cmd.Parameters.Add("?id_actigrafo", MySqlDbType.Float).Value = parametri[1];
+                    cmd.Parameters.Add("?indice_attività", MySqlDbType.Int32).Value = parametri[2];
+                    cmd.ExecuteNonQuery();
+                }
+
+                // Show the data on the console.
+                Console.WriteLine("Text received : {0}", data);
+
+                // Echo the data back to the client.
+                byte[] msg = Encoding.ASCII.GetBytes(data);
+
+                handler.Send(msg);
+                handler.Shutdown(SocketShutdown.Both);
+                handler.Close();
+            }
+
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.ToString());
+        }
+
+        Console.WriteLine("\nPress ENTER to continue...");
+        Console.Read();
     }
 
     public static bool SocketConnected(Socket s)
@@ -90,7 +212,7 @@ public class Asynchronous
             return true;
     }
 
-    public static void AcceptCallback(IAsyncResult ar)
+    /* public static void AcceptCallback(IAsyncResult ar)
     {
         // Get the socket that handles the client request.
         Socket listener = (Socket)ar.AsyncState;
@@ -144,18 +266,19 @@ public class Asynchronous
                     int minUmid=0, maxUmid=0, minPres=0, maxPres=0;
                     float minTemp=0, maxTemp=0;
                     cmd.Connection = DataBase_Connection.Open_Connection_DB();
-                    cmd.CommandText = "SELECT * from soglia";
+                    /* cmd.CommandText = "SELECT * from soglia";
                     MySqlDataReader reader = cmd.ExecuteReader();
                     //Leggi soglie
                     while (reader.Read())
                     {
                         minUmid = reader.GetInt32("minUmid");
                         maxUmid = reader.GetInt32("maxUmid");
-                        minPres = reader.GetInt32("minPres");
-                        maxPres = reader.GetInt32("maxPres");
+                        minPres = reader.GetInt32("minPress");
+                        maxPres = reader.GetInt32("maxPress");
                         minTemp = reader.GetFloat("minTemp");
                         maxTemp = reader.GetFloat("maxTemp");
                     }
+                    reader.Close();
                     //OTTIENI L'INDIRIZZO EMAIL DEL TITOLARE DELLA PALESTRA
 
                     //Invia mail
@@ -165,7 +288,7 @@ public class Asynchronous
                     }
 
                     cmd.CommandText = "INSERT INTO misura_ambientale(pressione, temperatura, umidita, Idsensore_ambientale) VALUES(?pressione, ?temperatura, ?umidita, ?idsensore)";
-                    cmd.Parameters.Add("?idsensore", MySqlDbType.Int32).Value = parametri[1];
+                    cmd.Parameters.Add("?idsensore", MySqlDbType.VarChar).Value = parametri[1];
                     cmd.Parameters.Add("?temperatura", MySqlDbType.Float).Value = parametri[2];
                     cmd.Parameters.Add("?pressione", MySqlDbType.Int32).Value = parametri[3];
                     cmd.Parameters.Add("?umidita", MySqlDbType.Int32).Value = parametri[4];
@@ -183,7 +306,6 @@ public class Asynchronous
                     cmd.ExecuteNonQuery();
                 }
 
-                DataBase_Connection.SELECT();
                 // All the data has been read from the 
                 // client. Display it on the console.
                 Console.WriteLine("Read {0} bytes from socket. \n Data : {1}",
@@ -221,15 +343,15 @@ public class Asynchronous
             int bytesSent = handler.EndSend(ar);
             Console.WriteLine("Sent {0} bytes to client.", bytesSent);
 
-            handler.Shutdown(SocketShutdown.Both);
-            handler.Close();
-
+           //handler.Shutdown(SocketShutdown.Send);
+           //handler.Close();
+          
         }
         catch (Exception e)
         {
             Console.WriteLine(e.ToString());
         }
-    }
+    } */
 
     public static int MainPeppe(String[] args, object port)
     {
