@@ -18,7 +18,7 @@ public class DataBase_Connection
         string myConnectionString;
 
         myConnectionString = "server=localhost;uid=root;" +
-            "pwd=000000;database=mrc_db;";
+            "pwd=root;database=mrc_db;";
 
         try
         {
