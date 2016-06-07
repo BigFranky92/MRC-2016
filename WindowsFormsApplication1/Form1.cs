@@ -35,9 +35,18 @@ namespace WindowsFormsApplication1
 
         private void button1_Click(object sender, EventArgs e)
         {
-            int port = int.Parse(portBox.Text); ; //Variabile in cui verrà immesso il valore della porta aperta per la connessione
+            int port=0;
+            try
+            {
+                port = int.Parse(portBox.Text); ; //Variabile in cui verrà immesso il valore della porta aperta per la connessione
+            } 
+            catch(Exception ex)
+            {
+                MessageBox.Show("Numero di porta non valido, immettere un numero di porta");
+                return;
+            }
 
-            
+            connectBtn.Enabled = false;
             bool avanza = check_porta(port); //Una volta premuto il tasto, vengono effettuati dei controlli per vedere se il numero di porta scelto è valido
                     
             Console.WriteLine(avanza);
@@ -45,9 +54,13 @@ namespace WindowsFormsApplication1
             {
                 object port_obj = (object)port;
                 Thread updateThread = new Thread(aggiorna_video); //Vengono fatti partire due thread, uno per aggiornare il video in tempo reale non appena vengono ricevuti nuovi valori
+                Console.WriteLine("1");
                 Thread workerThread = new Thread(Asynchronous.StartListening); //Ed il secondo thread per aprire la socket e mettersi in ascolto
+                Console.WriteLine("2");
                 updateThread.Start();
+                Console.WriteLine("3");
                 workerThread.Start(port_obj);
+                Console.WriteLine("4");
                 Console.WriteLine("Main thread: Starting StartListening...");
             }
 
@@ -61,10 +74,10 @@ namespace WindowsFormsApplication1
             IPHostEntry ipServer = Dns.Resolve(Dns.GetHostName());
             ipBox.Text = ipServer.AddressList[0].ToString();
 
-            log = new FileStream("MeasureLog.txt", FileMode.Append);
-            sw = new StreamWriter(log);
-            Console.SetOut(sw);
-            Console.WriteLine("prova scrittura su file");
+            //log = new FileStream("MeasureLog.txt", FileMode.Append);
+            //sw = new StreamWriter(log);
+            //Console.SetOut(sw);
+            //Console.WriteLine("prova scrittura su file");
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -103,15 +116,15 @@ namespace WindowsFormsApplication1
                         {
                             idBox.Invoke((MethodInvoker)delegate { idBox.Text = Asynchronous.parametri[1]; });
                             tempBox.Invoke((MethodInvoker)delegate { tempBox.Text = Asynchronous.parametri[2]; });
-                            humBox.Invoke((MethodInvoker)delegate { humBox.Text = Asynchronous.parametri[3]; });
-                            presBox.Invoke((MethodInvoker)delegate { presBox.Text = Asynchronous.parametri[4]; });
+                            presBox.Invoke((MethodInvoker)delegate { presBox.Text = Asynchronous.parametri[3]; });
+                            humBox.Invoke((MethodInvoker)delegate { humBox.Text = Asynchronous.parametri[4]; });
                         }
                         else
                         {
                             idBox.Text = Asynchronous.parametri[1];
                             tempBox.Text = Asynchronous.parametri[2];
-                            humBox.Text = Asynchronous.parametri[3];
-                            presBox.Text = Asynchronous.parametri[4];
+                            presBox.Text = Asynchronous.parametri[3];
+                            humBox.Text = Asynchronous.parametri[4];
                         }
                     }
                     catch (Exception e)

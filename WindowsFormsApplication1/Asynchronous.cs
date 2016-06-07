@@ -98,6 +98,7 @@ public class Asynchronous
         Socket listener = new Socket(AddressFamily.InterNetwork,
             SocketType.Stream, ProtocolType.Tcp);
 
+
         // Bind the socket to the local endpoint and 
         // listen for incoming connections.
         try
@@ -105,12 +106,13 @@ public class Asynchronous
             listener.Bind(localEndPoint);
             listener.Listen(10);
 
+            Socket handler = listener.Accept();
+            Console.WriteLine("Waiting for a connection...");
+
             // Start listening for connections.
             while (true)
             {
-                Console.WriteLine("Waiting for a connection...");
                 // Program is suspended while waiting for an incoming connection.
-               Socket handler = listener.Accept();
                //handler.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.KeepAlive, true);
                data = null;
 
@@ -129,10 +131,13 @@ public class Asynchronous
                 parametri_app = data.Split('<');
                 parametri = parametri_app[0].Split('#');
                 Console.WriteLine(parametri[0]);
+                Console.WriteLine(parametri[1]);
+                Console.WriteLine(parametri[2]);
+                Console.WriteLine(parametri[3]);
                 //Ricevuti i dati, distingue il tipo di pacchetto (il campo Type è il primo campo del pacchetto)
                 if (parametri[0] == "0") //Ho ricevuto dati ambientali
                 {
-                    //new_parameters_env = true;
+                    new_parameters_env = true;
                     //Dopo aver ricevuto i dati, salvali in un DB: 
                     MySqlCommand cmd = new MySqlCommand();
 
@@ -140,7 +145,7 @@ public class Asynchronous
                     //(l'aggiornamento del DB è fatto da un trigger)
                     int minUmid = 0, maxUmid = 0, minPres = 0, maxPres = 0;
                     float minTemp = 0, maxTemp = 0;
-                   // cmd.Connection = DataBase_Connection.Open_Connection_DB();
+                    cmd.Connection = DataBase_Connection.Open_Connection_DB();
                     /* cmd.CommandText = "SELECT * from soglia";
                     MySqlDataReader reader = cmd.ExecuteReader();
                     //Leggi soglie
@@ -162,12 +167,12 @@ public class Asynchronous
                         EmailSender.sendEmail(float.Parse(parametri[2]), int.Parse(parametri[3]), int.Parse(parametri[4]), "fabiopalumbo@msn");
                     } */
 
-                    /*cmd.CommandText = "INSERT INTO misura_ambientale(pressione, temperatura, umidita, Idsensore_ambientale) VALUES(?pressione, ?temperatura, ?umidita, ?idsensore)";
+                    cmd.CommandText = "INSERT INTO misura_ambientale(pressione, temperatura, umidita, Idsensore_ambientale) VALUES(?pressione, ?temperatura, ?umidita, ?idsensore)";
                     cmd.Parameters.Add("?idsensore", MySqlDbType.VarChar).Value = parametri[1];
                     cmd.Parameters.Add("?temperatura", MySqlDbType.Float).Value = parametri[2];
                     cmd.Parameters.Add("?pressione", MySqlDbType.Int32).Value = parametri[3];
                     cmd.Parameters.Add("?umidita", MySqlDbType.Int32).Value = parametri[4];
-                    cmd.ExecuteNonQuery();*/
+                    cmd.ExecuteNonQuery();
                 }
                 else if (parametri[0] == "1") //Ho ricevuto dati relativi all'attività fisica
                 {
@@ -187,9 +192,10 @@ public class Asynchronous
                 // Echo the data back to the client.
                 byte[] msg = Encoding.ASCII.GetBytes(data);
 
-                handler.Send(msg);
-                handler.Shutdown(SocketShutdown.Both);
-                handler.Close();
+                //handler.Send(msg);
+                //handler.Disconnect(true);
+                //handler.Shutdown(SocketShutdown.Both);
+                //handler.Close();
             }
 
         }

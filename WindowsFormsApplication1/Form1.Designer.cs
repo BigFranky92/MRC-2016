@@ -125,7 +125,7 @@
             this.idBox.Location = new System.Drawing.Point(447, 11);
             this.idBox.Name = "idBox";
             this.idBox.ReadOnly = true;
-            this.idBox.Size = new System.Drawing.Size(34, 20);
+            this.idBox.Size = new System.Drawing.Size(117, 20);
             this.idBox.TabIndex = 8;
             // 
             // tempBox
@@ -186,6 +186,7 @@
             this.personBox.ReadOnly = true;
             this.personBox.Size = new System.Drawing.Size(34, 20);
             this.personBox.TabIndex = 16;
+            this.personBox.Visible = false;
             // 
             // personLabel
             // 
@@ -195,6 +196,7 @@
             this.personLabel.Size = new System.Drawing.Size(60, 13);
             this.personLabel.TabIndex = 15;
             this.personLabel.Text = "ID Persona";
+            this.personLabel.Visible = false;
             // 
             // activityIndex
             // 
@@ -203,6 +205,7 @@
             this.activityIndex.ReadOnly = true;
             this.activityIndex.Size = new System.Drawing.Size(34, 20);
             this.activityIndex.TabIndex = 18;
+            this.activityIndex.Visible = false;
             // 
             // activityLabel
             // 
@@ -212,6 +215,7 @@
             this.activityLabel.Size = new System.Drawing.Size(66, 13);
             this.activityLabel.TabIndex = 17;
             this.activityLabel.Text = "Attività fisica";
+            this.activityLabel.Visible = false;
             // 
             // Form1
             // 
