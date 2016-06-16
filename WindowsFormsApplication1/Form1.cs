@@ -118,6 +118,7 @@ namespace WindowsFormsApplication1
                             tempBox.Invoke((MethodInvoker)delegate { tempBox.Text = Asynchronous.parametri[2]; });
                             presBox.Invoke((MethodInvoker)delegate { presBox.Text = Asynchronous.parametri[3]; });
                             humBox.Invoke((MethodInvoker)delegate { humBox.Text = Asynchronous.parametri[4]; });
+                            stdBox.Invoke((MethodInvoker)delegate { stdBox.Text = Asynchronous.parametri[5]; });
                         }
                         else
                         {
