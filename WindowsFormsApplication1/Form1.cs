@@ -125,6 +125,7 @@ namespace WindowsFormsApplication1
                             tempBox.Text = Asynchronous.parametri[2];
                             presBox.Text = Asynchronous.parametri[3];
                             humBox.Text = Asynchronous.parametri[4];
+                            stdBox.Text = Asynchronous.parametri[5];
                         }
                     }
                     catch (Exception e)

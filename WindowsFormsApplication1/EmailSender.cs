@@ -14,19 +14,27 @@ namespace WindowsFormsApplication1
         {
             string to = email;
             string from = "mrc.gruppo@libero.it";
-            MailMessage message = new MailMessage(from, to);
+            MailAddress toMail = new MailAddress(to);
+            MailAddress fromMail = new MailAddress(from);
+            MailMessage message = new MailMessage(fromMail.Address, toMail.Address);
+            //message.To = toMail;
+            //message.Sender = fromMail;
+            //message.From = fromMail;
             message.Subject = "Allerta superamento soglie nel tuo centro";
-            message.Body = "Ciao";//@"E' stato rilevato un superamento delle soglie relative alle condiioni ambientali ottimali nel tuo centro. I dati rilevati sono \n"
+            message.Body = "Ciao"; //@"E' stato rilevato un superamento delle soglie relative alle condiioni ambientali ottimali nel tuo centro. I dati rilevati sono \n"
             //                 + "Temperatura: " + measuredTemp + "\n Pressione: " + measuredPres + "\n Umidità: " + measuredPres;
-            SmtpClient client = new SmtpClient("smtp.libero.it", 465);
-            client.DeliveryMethod = SmtpDeliveryMethod.Network;
-            client.UseDefaultCredentials = false;
-            NetworkCredential basicCredential = new NetworkCredential("mrc.gruppo@libero.it", "nuncfermnisciun2016");
-            client.Credentials = basicCredential;
-            client.EnableSsl = true;
-
             try
             {
+                SmtpClient client = new SmtpClient();
+                client.Host = "smtp.libero.it";
+                client.Port = 465;
+                //client.Timeout = 10000;
+                client.DeliveryMethod = SmtpDeliveryMethod.Network;
+                client.UseDefaultCredentials = false;
+                NetworkCredential basicCredential = new NetworkCredential("mrc.gruppo@libero.it", "nuncfermnisciun2016");
+                client.Credentials = basicCredential;
+                client.EnableSsl = true;
+
                 client.Send(message);
             }
             catch (Exception ex)

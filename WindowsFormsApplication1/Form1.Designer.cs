@@ -47,6 +47,8 @@
             this.personLabel = new System.Windows.Forms.Label();
             this.activityIndex = new System.Windows.Forms.TextBox();
             this.activityLabel = new System.Windows.Forms.Label();
+            this.stdBox = new System.Windows.Forms.TextBox();
+            this.stdLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // connectBtn
@@ -217,11 +219,32 @@
             this.activityLabel.Text = "Attività fisica";
             this.activityLabel.Visible = false;
             // 
+            // stdBox
+            // 
+            this.stdBox.Location = new System.Drawing.Point(203, 117);
+            this.stdBox.Name = "stdBox";
+            this.stdBox.ReadOnly = true;
+            this.stdBox.Size = new System.Drawing.Size(34, 20);
+            this.stdBox.TabIndex = 20;
+            this.stdBox.Visible = false;
+            // 
+            // stdLabel
+            // 
+            this.stdLabel.AutoSize = true;
+            this.stdLabel.Location = new System.Drawing.Point(62, 120);
+            this.stdLabel.Name = "stdLabel";
+            this.stdLabel.Size = new System.Drawing.Size(135, 13);
+            this.stdLabel.TabIndex = 19;
+            this.stdLabel.Text = "DEVIAZIONE STANDARD";
+            this.stdLabel.Visible = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(620, 258);
+            this.Controls.Add(this.stdBox);
+            this.Controls.Add(this.stdLabel);
             this.Controls.Add(this.activityIndex);
             this.Controls.Add(this.activityLabel);
             this.Controls.Add(this.personBox);
@@ -272,6 +295,8 @@
         private System.Windows.Forms.Label personLabel;
         private System.Windows.Forms.TextBox activityIndex;
         private System.Windows.Forms.Label activityLabel;
+        private System.Windows.Forms.TextBox stdBox;
+        private System.Windows.Forms.Label stdLabel;
     }
 }
 

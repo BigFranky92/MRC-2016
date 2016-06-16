@@ -134,6 +134,9 @@ public class Asynchronous
                 Console.WriteLine(parametri[1]);
                 Console.WriteLine(parametri[2]);
                 Console.WriteLine(parametri[3]);
+                Console.WriteLine(parametri[4]);
+                Console.WriteLine(parametri[5]);
+
                 //Ricevuti i dati, distingue il tipo di pacchetto (il campo Type è il primo campo del pacchetto)
                 if (parametri[0] == "0") //Ho ricevuto dati ambientali
                 {
