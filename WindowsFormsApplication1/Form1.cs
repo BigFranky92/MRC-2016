@@ -179,5 +179,10 @@ namespace WindowsFormsApplication1
                 else return true;         
 
         }
+
+        private void stdLabel_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

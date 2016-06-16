@@ -226,7 +226,6 @@
             this.stdBox.ReadOnly = true;
             this.stdBox.Size = new System.Drawing.Size(34, 20);
             this.stdBox.TabIndex = 20;
-            this.stdBox.Visible = false;
             // 
             // stdLabel
             // 
@@ -236,7 +235,7 @@
             this.stdLabel.Size = new System.Drawing.Size(135, 13);
             this.stdLabel.TabIndex = 19;
             this.stdLabel.Text = "DEVIAZIONE STANDARD";
-            this.stdLabel.Visible = false;
+            this.stdLabel.Click += new System.EventHandler(this.stdLabel_Click);
             // 
             // Form1
             // 
