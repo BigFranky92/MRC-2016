@@ -226,9 +226,11 @@
             // 
             // logBox
             // 
+            this.logBox.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.logBox.Location = new System.Drawing.Point(24, 90);
             this.logBox.Multiline = true;
             this.logBox.Name = "logBox";
+            this.logBox.ReadOnly = true;
             this.logBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.logBox.Size = new System.Drawing.Size(250, 150);
             this.logBox.TabIndex = 20;
