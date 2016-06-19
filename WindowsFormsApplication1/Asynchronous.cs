@@ -17,6 +17,7 @@ using System.Threading;
 using MySql.Data.MySqlClient;
 using WindowsFormsApplication1;
 
+
 public class Asynchronous
 {
     public static string data = null;
@@ -188,13 +189,15 @@ public class Asynchronous
                     Console.WriteLine(parametri[1]);
                     Console.WriteLine(parametri[2]);
 
+                    Classifier ClAct = new Classifier();
                     new_parameters_activity = true;
                     //Dopo aver ricevuto i dati, salvali in un DB: 
                     MySqlCommand cmd = new MySqlCommand();
                     cmd.Connection = DataBase_Connection.Open_Connection_DB();
                     cmd.CommandText = "INSERT INTO misura_actigrafo(indice_attività, idactigrafo) VALUES(?indice_attività, ?id_actigrafo)";
                     cmd.Parameters.Add("?id_actigrafo", MySqlDbType.VarChar).Value = parametri[1];
-                    cmd.Parameters.Add("?indice_attività", MySqlDbType.Int32).Value = parametri[2];
+
+                    cmd.Parameters.Add("?indice_attività", MySqlDbType.Int32).Value = ClAct.classifica_attività(Int32.Parse(parametri[2]));
                     cmd.ExecuteNonQuery();
                 }
 

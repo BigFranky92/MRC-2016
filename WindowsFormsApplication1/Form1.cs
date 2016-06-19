@@ -73,7 +73,7 @@ namespace WindowsFormsApplication1
 
             IPHostEntry ipServer = Dns.Resolve(Dns.GetHostName());
             ipBox.Text = ipServer.AddressList[0].ToString();
-            logBox.AppendText("Server connesso; IP = " + ipServer.AddressList[0].ToString());
+            logBox.AppendText("Server connesso: IP = " + ipServer.AddressList[0].ToString());
 
 
             //log = new FileStream("MeasureLog.txt", FileMode.Append);
@@ -112,8 +112,7 @@ namespace WindowsFormsApplication1
             {
                 if (Asynchronous.new_parameters_env)
                 {
-                    logBox.AppendText("Ricevuti dati da sensore ambientale: \n ");
-                    logBox.AppendText("ID = " + Asynchronous.parametri[1] + "\n Temperatura = " + Asynchronous.parametri[2] + "\n Pressione = " + Asynchronous.parametri[3] + "\n Umidità = " + Asynchronous.parametri[4]);
+                    
                     try //L'aggiornamento dei dati a video viene fatto in un try-catch per evitare che vengano scritti dei dati nulli e vada in crash il programma
                     {
                         if (idBox.InvokeRequired) //Viene utilizzato il metodo InvokeRequired in quanto il thread che va ad aggiornare le textBox non è lo stesso che le ha create, e quindi non ha un vero e proprio controllo su di esse
@@ -122,40 +121,63 @@ namespace WindowsFormsApplication1
                             tempBox.Invoke((MethodInvoker)delegate { tempBox.Text = Asynchronous.parametri[2]; });
                             presBox.Invoke((MethodInvoker)delegate { presBox.Text = Asynchronous.parametri[3]; });
                             humBox.Invoke((MethodInvoker)delegate { humBox.Text = Asynchronous.parametri[4]; });
+
+                            logBox.Invoke((MethodInvoker)delegate {
+                                logBox.AppendText("\r\n => Ricevuti dati da sensore ambientale:  ");
+                                logBox.AppendText("\r\n     ID = " + Asynchronous.parametri[1] + "\r\n     Temperatura = " + Asynchronous.parametri[2] + "\r\n     Pressione = " + Asynchronous.parametri[3] + "\r\n     Umidità = " + Asynchronous.parametri[4]);
+                            });
                         }
+                        
+                            
                         else
                         {
                             idBox.Text = Asynchronous.parametri[1];
                             tempBox.Text = Asynchronous.parametri[2];
                             presBox.Text = Asynchronous.parametri[3];
                             humBox.Text = Asynchronous.parametri[4];
+                            logBox.AppendText("\r\n => Ricevuti dati da sensore ambientale:  ");
+                            logBox.AppendText("\r\n     ID = " + Asynchronous.parametri[1] + "\r\n     Temperatura = " + Asynchronous.parametri[2] + "\r\n     Pressione = " + Asynchronous.parametri[3] + "\r\n     Umidità = " + Asynchronous.parametri[4]);
                         }
                     }
                     catch (Exception e)
                     {
                         Console.Write(e.ToString());
                     }
+
+                    Asynchronous.new_parameters_env = false;
                 }
+              
                 else if (Asynchronous.new_parameters_activity)
                 {
-                    logBox.AppendText("Ricevuti dati da actigrafo: \n ");
-                    logBox.AppendText("ID = " + Asynchronous.parametri[1] + "\n Deviazione standard = " + Asynchronous.parametri[2]);
+
                     try //L'aggiornamento dei dati a video viene fatto in un try-catch per evitare che vengano scritti dei dati nulli e vada in crash il programma
                     {
+
                         if (idBox.InvokeRequired) //Viene utilizzato il metodo InvokeRequired in quanto il thread che va ad aggiornare le textBox non è lo stesso che le ha create, e quindi non ha un vero e proprio controllo su di esse
                         {
                             personBox.Invoke((MethodInvoker)delegate { personBox.Text = Asynchronous.parametri[1]; });
-                            activityIndex.Invoke((MethodInvoker)delegate { activityIndex.Text = Asynchronous.parametri[2]; });                        }
+                            activityIndex.Invoke((MethodInvoker)delegate { activityIndex.Text = Asynchronous.parametri[2]; });
+                        
+                            logBox.Invoke((MethodInvoker)delegate
+                             {
+                                 logBox.AppendText("\r\n => Ricevuti dati da actigrafo:  ");
+                                 logBox.AppendText("\r\n     ID = " + Asynchronous.parametri[1] + "\r\n     Deviazione standard = " + Asynchronous.parametri[2]);
+                             });
+                        }
                         else
                         {
                             personBox.Text = Asynchronous.parametri[1];
-                            activityIndex.Text = Asynchronous.parametri[6];
+                            activityIndex.Text = Asynchronous.parametri[2];
+                            logBox.AppendText("\r\n => Ricevuti dati da actigrafo:  ");
+                            logBox.AppendText("\r\n     ID = " + Asynchronous.parametri[1] + "\r\n     Deviazione standard = " + Asynchronous.parametri[2]);
                         }
                     }
                     catch (Exception e)
                     {
                         Console.Write(e.ToString());
                     }
+
+                    Asynchronous.new_parameters_activity = false;
                 }
             }
         }

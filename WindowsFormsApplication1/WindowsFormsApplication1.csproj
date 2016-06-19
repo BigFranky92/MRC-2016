@@ -50,6 +50,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Classifier.cs">
+      <Link>Classifier.cs</Link>
+    </Compile>
     <Compile Include="..\DBConnection.cs" />
     <Compile Include="Asynchronous.cs" />
     <Compile Include="EmailSender.cs" />
