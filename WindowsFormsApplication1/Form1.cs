@@ -118,7 +118,6 @@ namespace WindowsFormsApplication1
                             tempBox.Invoke((MethodInvoker)delegate { tempBox.Text = Asynchronous.parametri[2]; });
                             presBox.Invoke((MethodInvoker)delegate { presBox.Text = Asynchronous.parametri[3]; });
                             humBox.Invoke((MethodInvoker)delegate { humBox.Text = Asynchronous.parametri[4]; });
-                            stdBox.Invoke((MethodInvoker)delegate { stdBox.Text = Asynchronous.parametri[5]; });
                         }
                         else
                         {
@@ -126,7 +125,6 @@ namespace WindowsFormsApplication1
                             tempBox.Text = Asynchronous.parametri[2];
                             presBox.Text = Asynchronous.parametri[3];
                             humBox.Text = Asynchronous.parametri[4];
-                            stdBox.Text = Asynchronous.parametri[5];
                         }
                     }
                     catch (Exception e)
@@ -140,11 +138,11 @@ namespace WindowsFormsApplication1
                     {
                         if (idBox.InvokeRequired) //Viene utilizzato il metodo InvokeRequired in quanto il thread che va ad aggiornare le textBox non è lo stesso che le ha create, e quindi non ha un vero e proprio controllo su di esse
                         {
-                            personBox.Invoke((MethodInvoker)delegate { personBox.Text = Asynchronous.parametri[5]; });
-                            activityIndex.Invoke((MethodInvoker)delegate { activityIndex.Text = Asynchronous.parametri[6]; });                        }
+                            personBox.Invoke((MethodInvoker)delegate { personBox.Text = Asynchronous.parametri[1]; });
+                            activityIndex.Invoke((MethodInvoker)delegate { activityIndex.Text = Asynchronous.parametri[2]; });                        }
                         else
                         {
-                            personBox.Text = Asynchronous.parametri[5];
+                            personBox.Text = Asynchronous.parametri[1];
                             activityIndex.Text = Asynchronous.parametri[6];
                         }
                     }
