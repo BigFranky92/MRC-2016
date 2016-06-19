@@ -47,6 +47,8 @@
             this.personLabel = new System.Windows.Forms.Label();
             this.activityIndex = new System.Windows.Forms.TextBox();
             this.activityLabel = new System.Windows.Forms.Label();
+            this.barLabel = new System.Windows.Forms.Label();
+            this.logBox = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // connectBtn
@@ -213,11 +215,31 @@
             this.activityLabel.TabIndex = 17;
             this.activityLabel.Text = "Attività fisica (std)";
             // 
+            // barLabel
+            // 
+            this.barLabel.AutoSize = true;
+            this.barLabel.Location = new System.Drawing.Point(504, 117);
+            this.barLabel.Name = "barLabel";
+            this.barLabel.Size = new System.Drawing.Size(30, 13);
+            this.barLabel.TabIndex = 19;
+            this.barLabel.Text = "mbar";
+            // 
+            // logBox
+            // 
+            this.logBox.Location = new System.Drawing.Point(24, 90);
+            this.logBox.Multiline = true;
+            this.logBox.Name = "logBox";
+            this.logBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.logBox.Size = new System.Drawing.Size(250, 150);
+            this.logBox.TabIndex = 20;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(620, 258);
+            this.Controls.Add(this.logBox);
+            this.Controls.Add(this.barLabel);
             this.Controls.Add(this.activityIndex);
             this.Controls.Add(this.activityLabel);
             this.Controls.Add(this.personBox);
@@ -268,6 +290,8 @@
         private System.Windows.Forms.Label personLabel;
         private System.Windows.Forms.TextBox activityIndex;
         private System.Windows.Forms.Label activityLabel;
+        private System.Windows.Forms.Label barLabel;
+        public System.Windows.Forms.TextBox logBox;
     }
 }
 

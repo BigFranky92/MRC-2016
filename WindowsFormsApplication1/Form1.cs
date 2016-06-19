@@ -73,6 +73,8 @@ namespace WindowsFormsApplication1
 
             IPHostEntry ipServer = Dns.Resolve(Dns.GetHostName());
             ipBox.Text = ipServer.AddressList[0].ToString();
+            logBox.AppendText("Server connesso; IP = " + ipServer.AddressList[0].ToString());
+
 
             //log = new FileStream("MeasureLog.txt", FileMode.Append);
             //sw = new StreamWriter(log);
@@ -110,6 +112,8 @@ namespace WindowsFormsApplication1
             {
                 if (Asynchronous.new_parameters_env)
                 {
+                    logBox.AppendText("Ricevuti dati da sensore ambientale: \n ");
+                    logBox.AppendText("ID = " + Asynchronous.parametri[1] + "\n Temperatura = " + Asynchronous.parametri[2] + "\n Pressione = " + Asynchronous.parametri[3] + "\n Umidità = " + Asynchronous.parametri[4]);
                     try //L'aggiornamento dei dati a video viene fatto in un try-catch per evitare che vengano scritti dei dati nulli e vada in crash il programma
                     {
                         if (idBox.InvokeRequired) //Viene utilizzato il metodo InvokeRequired in quanto il thread che va ad aggiornare le textBox non è lo stesso che le ha create, e quindi non ha un vero e proprio controllo su di esse
@@ -134,6 +138,8 @@ namespace WindowsFormsApplication1
                 }
                 else if (Asynchronous.new_parameters_activity)
                 {
+                    logBox.AppendText("Ricevuti dati da actigrafo: \n ");
+                    logBox.AppendText("ID = " + Asynchronous.parametri[1] + "\n Deviazione standard = " + Asynchronous.parametri[2]);
                     try //L'aggiornamento dei dati a video viene fatto in un try-catch per evitare che vengano scritti dei dati nulli e vada in crash il programma
                     {
                         if (idBox.InvokeRequired) //Viene utilizzato il metodo InvokeRequired in quanto il thread che va ad aggiornare le textBox non è lo stesso che le ha create, e quindi non ha un vero e proprio controllo su di esse
@@ -179,9 +185,9 @@ namespace WindowsFormsApplication1
 
         }
 
-        private void stdLabel_Click(object sender, EventArgs e)
+        public void aggiornaLog(String update)
         {
-
+            logBox.AppendText(update);
         }
     }
 }

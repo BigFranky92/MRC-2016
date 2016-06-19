@@ -90,6 +90,7 @@ public class Asynchronous
         IPAddress ipAddress = ipHostInfo.AddressList[0];
 
         Console.WriteLine(ipAddress.ToString());
+
         int popo = (int)port;
         IPEndPoint localEndPoint = new IPEndPoint(ipAddress, popo);
 
@@ -105,10 +106,12 @@ public class Asynchronous
         {
             listener.Bind(localEndPoint);
             listener.Listen(10);
+            Form1 form = new Form1();
             Console.WriteLine("Waiting for a connection...");
+            form.aggiornaLog("Server in ascolto, in attesa di una connessione...");
             Socket handler = listener.Accept();
             Console.WriteLine("Connection Accepted from ... " + handler.RemoteEndPoint.ToString());
-            
+            form.aggiornaLog("Accettata una connessione da: " + handler.RemoteEndPoint.ToString());
 
             // Start listening for connections.
             while (true)
@@ -211,6 +214,8 @@ public class Asynchronous
         catch (Exception e)
         {
             Console.WriteLine(e.ToString());
+            Form1 form = new Form1();
+            form.aggiornaLog(e.ToString());
         }
 
         Console.WriteLine("\nPress ENTER to continue...");
