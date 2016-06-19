@@ -105,9 +105,10 @@ public class Asynchronous
         {
             listener.Bind(localEndPoint);
             listener.Listen(10);
-
-            Socket handler = listener.Accept();
             Console.WriteLine("Waiting for a connection...");
+            Socket handler = listener.Accept();
+            Console.WriteLine("Connection Accepted from ... " + handler.RemoteEndPoint.ToString());
+            
 
             // Start listening for connections.
             while (true)
@@ -130,16 +131,17 @@ public class Asynchronous
 
                 parametri_app = data.Split('<');
                 parametri = parametri_app[0].Split('#');
-                Console.WriteLine(parametri[0]);
-                Console.WriteLine(parametri[1]);
-                Console.WriteLine(parametri[2]);
-                Console.WriteLine(parametri[3]);
-                Console.WriteLine(parametri[4]);
-                Console.WriteLine(parametri[5]);
-
+                
+               
                 //Ricevuti i dati, distingue il tipo di pacchetto (il campo Type è il primo campo del pacchetto)
                 if (parametri[0] == "0") //Ho ricevuto dati ambientali
                 {
+                    Console.WriteLine(parametri[0]);
+                    Console.WriteLine(parametri[1]);
+                    Console.WriteLine(parametri[2]);
+                    Console.WriteLine(parametri[3]);
+                    Console.WriteLine(parametri[4]);
+
                     new_parameters_env = true;
                     //Dopo aver ricevuto i dati, salvali in un DB: 
                     MySqlCommand cmd = new MySqlCommand();
@@ -179,12 +181,16 @@ public class Asynchronous
                 }
                 else if (parametri[0] == "1") //Ho ricevuto dati relativi all'attività fisica
                 {
+                    Console.WriteLine(parametri[0]);
+                    Console.WriteLine(parametri[1]);
+                    Console.WriteLine(parametri[2]);
+
                     new_parameters_activity = true;
                     //Dopo aver ricevuto i dati, salvali in un DB: 
                     MySqlCommand cmd = new MySqlCommand();
                     cmd.Connection = DataBase_Connection.Open_Connection_DB();
-                    cmd.CommandText = "INSERT INTO misura_actigrafo(indice_attività, Actigrafo_idactigrafo) VALUES(?indice_attività, ?id_actigrafo)";
-                    cmd.Parameters.Add("?id_actigrafo", MySqlDbType.Float).Value = parametri[1];
+                    cmd.CommandText = "INSERT INTO misura_actigrafo(indice_attività, idactigrafo) VALUES(?indice_attività, ?id_actigrafo)";
+                    cmd.Parameters.Add("?id_actigrafo", MySqlDbType.VarChar).Value = parametri[1];
                     cmd.Parameters.Add("?indice_attività", MySqlDbType.Int32).Value = parametri[2];
                     cmd.ExecuteNonQuery();
                 }

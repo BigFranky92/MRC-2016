@@ -184,7 +184,7 @@
             this.personBox.Location = new System.Drawing.Point(447, 149);
             this.personBox.Name = "personBox";
             this.personBox.ReadOnly = true;
-            this.personBox.Size = new System.Drawing.Size(34, 20);
+            this.personBox.Size = new System.Drawing.Size(117, 20);
             this.personBox.TabIndex = 16;
             // 
             // personLabel
