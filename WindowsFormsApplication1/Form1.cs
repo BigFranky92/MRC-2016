@@ -27,6 +27,7 @@ namespace WindowsFormsApplication1
 
         private static FileStream log;
         private static StreamWriter sw;
+        private Thread workerThread;
 
         public Form1()
         {
@@ -50,12 +51,13 @@ namespace WindowsFormsApplication1
             bool avanza = check_porta(port); //Una volta premuto il tasto, vengono effettuati dei controlli per vedere se il numero di porta scelto è valido
                     
             Console.WriteLine(avanza);
+            
             if (avanza == true)
             {
                 object port_obj = (object)port;
                 Thread updateThread = new Thread(aggiorna_video); //Vengono fatti partire due thread, uno per aggiornare il video in tempo reale non appena vengono ricevuti nuovi valori
                 Console.WriteLine("1");
-                Thread workerThread = new Thread(Asynchronous.StartListening); //Ed il secondo thread per aprire la socket e mettersi in ascolto
+                workerThread = new Thread(Asynchronous.StartListening); //Ed il secondo thread per aprire la socket e mettersi in ascolto
                 Console.WriteLine("2");
                 updateThread.Start();
                 Console.WriteLine("3");
@@ -142,6 +144,7 @@ namespace WindowsFormsApplication1
                     catch (Exception e)
                     {
                         Console.Write(e.ToString());
+                        Application.Exit();
                     }
 
                     Asynchronous.new_parameters_env = false;
@@ -175,6 +178,7 @@ namespace WindowsFormsApplication1
                     catch (Exception e)
                     {
                         Console.Write(e.ToString());
+                        Application.Exit();
                     }
 
                     Asynchronous.new_parameters_activity = false;
@@ -210,6 +214,15 @@ namespace WindowsFormsApplication1
         public void aggiornaLog(String update)
         {
             logBox.AppendText(update);
+        }
+
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            
+            Asynchronous.close_socket();
+            workerThread.Abort();
+            Application.Exit();
+
         }
     }
 }

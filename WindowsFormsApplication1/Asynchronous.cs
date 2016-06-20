@@ -25,7 +25,7 @@ public class Asynchronous
     public static string[] parametri_app;
     public static bool new_parameters_env = false; //Segnala la presenza di nuovi dati ambientali
     public static bool new_parameters_activity = false; //Segnala la presenza di dati relativi all'attività fisica
-
+    public static Socket listener;
     // Thread signal.
     public static ManualResetEvent allDone = new ManualResetEvent(false);
 
@@ -97,7 +97,7 @@ public class Asynchronous
 
 
         // Create a TCP/IP socket.
-        Socket listener = new Socket(AddressFamily.InterNetwork,
+        listener = new Socket(AddressFamily.InterNetwork,
             SocketType.Stream, ProtocolType.Tcp);
 
 
@@ -381,4 +381,24 @@ public class Asynchronous
         StartListening(port);
         return 0;
     }
+
+    public static void close_socket() {
+
+        try
+        {
+            listener.Shutdown(SocketShutdown.Send);
+            listener.Close();
+        }
+        catch (SocketException se)
+        {
+
+            listener.Close();
+            Console.WriteLine(se.ToString());
+
+        }
+    }
+
+
+
+
 }
