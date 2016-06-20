@@ -392,6 +392,7 @@ public class Asynchronous
         catch (SocketException se)
         {
 
+
             listener.Close();
             Console.WriteLine(se.ToString());
 
