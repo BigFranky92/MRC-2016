@@ -349,6 +349,7 @@ public class Asynchronous
 
                     // Show the data on the console.
                     Console.WriteLine("Text received : {0}", data);
+                    bytesRead = 0;
 
                 }
                 /* 
