@@ -254,6 +254,7 @@ public class Asynchronous
         // Create the state object.
         StateObject state = new StateObject();
         state.workSocket = handler;
+        Console.WriteLine("Connection Accepted from ... " + handler.RemoteEndPoint.ToString());
         handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
             new AsyncCallback(ReadCallback), state);
     }
