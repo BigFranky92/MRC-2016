@@ -31,7 +31,8 @@ public class Asynchronous
 
     public static void StartListening(object port)
     {
-        /* bool ris;
+        //------------------------------------------------------
+        bool ris;
         // Data buffer for incoming data.
         byte[] bytes = new Byte[1024];
 
@@ -80,7 +81,8 @@ public class Asynchronous
         Console.WriteLine("\nPress ENTER to continue...");
         Console.Read();
         
-    */
+    //--------------------------------------------------------------------------------
+    /*
         // Data buffer for incoming data.
         byte[] bytes = new Byte[1024];
 
@@ -106,6 +108,7 @@ public class Asynchronous
         try
         {
             listener.Bind(localEndPoint);
+            
             listener.Listen(10);
             Form1 form = new Form1();
             Console.WriteLine("Waiting for a connection...");
@@ -155,7 +158,7 @@ public class Asynchronous
                     int minUmid = 0, maxUmid = 0, minPres = 0, maxPres = 0;
                     float minTemp = 0, maxTemp = 0;
                     cmd.Connection = DataBase_Connection.Open_Connection_DB();
-                    /* cmd.CommandText = "SELECT * from soglia";
+                     cmd.CommandText = "SELECT * from soglia";
                     MySqlDataReader reader = cmd.ExecuteReader();
                     //Leggi soglie
                     while (reader.Read())
@@ -167,14 +170,14 @@ public class Asynchronous
                         minTemp = reader.GetFloat("minTemp");
                         maxTemp = reader.GetFloat("maxTemp");
                     }
-                    reader.Close(); */
+                    reader.Close(); 
                     //OTTIENI L'INDIRIZZO EMAIL DEL TITOLARE DELLA PALESTRA
 
                     //Invia mail
-                    /* if (float.Parse(parametri[2])>maxTemp || float.Parse(parametri[2]) <minTemp || int.Parse(parametri[3])<minPres || int.Parse(parametri[3])>maxPres || int.Parse(parametri[4])<minUmid || int.Parse(parametri[4])>maxUmid)
+                     if (float.Parse(parametri[2])>maxTemp || float.Parse(parametri[2]) <minTemp || int.Parse(parametri[3])<minPres || int.Parse(parametri[3])>maxPres || int.Parse(parametri[4])<minUmid || int.Parse(parametri[4])>maxUmid)
                     {
                         EmailSender.sendEmail(float.Parse(parametri[2]), int.Parse(parametri[3]), int.Parse(parametri[4]), "fabiopalumbo@msn");
-                    } */
+                    } 
 
                     cmd.CommandText = "INSERT INTO misura_ambientale(pressione, temperatura, umidita, Idsensore_ambientale) VALUES(?pressione, ?temperatura, ?umidita, ?idsensore)";
                     cmd.Parameters.Add("?idsensore", MySqlDbType.VarChar).Value = parametri[1];
@@ -209,8 +212,10 @@ public class Asynchronous
 
                 //handler.Send(msg);
                 //handler.Disconnect(true);
-                //handler.Shutdown(SocketShutdown.Both);
+                
+                //handler.Shutdown(SocketShutdown.Send);
                 //handler.Close();
+
             }
 
         }
@@ -234,8 +239,9 @@ public class Asynchronous
         else
             return true;
     }
+*/
 
-    /* public static void AcceptCallback(IAsyncResult ar)
+     public static void AcceptCallback(IAsyncResult ar)
     {
         // Get the socket that handles the client request.
         Socket listener = (Socket)ar.AsyncState;
@@ -289,6 +295,7 @@ public class Asynchronous
                     int minUmid=0, maxUmid=0, minPres=0, maxPres=0;
                     float minTemp=0, maxTemp=0;
                     cmd.Connection = DataBase_Connection.Open_Connection_DB();
+
                     /* cmd.CommandText = "SELECT * from soglia";
                     MySqlDataReader reader = cmd.ExecuteReader();
                     //Leggi soglie
@@ -345,6 +352,8 @@ public class Asynchronous
         }
     }
 
+
+    /*
     private static void Send(Socket handler, String data)
     {
         // Convert the string data to byte data using ASCII encoding.
