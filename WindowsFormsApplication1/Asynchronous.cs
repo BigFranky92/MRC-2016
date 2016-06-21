@@ -261,96 +261,98 @@ public class Asynchronous
 
     public static void ReadCallback(IAsyncResult ar)
     {
-        String content = String.Empty;
-
-        // Retrieve the state object and the handler socket
-        // from the asynchronous state object.
-        StateObject state = (StateObject) ar.AsyncState;
-        Socket handler = state.workSocket;
-
-        // Read data from the client socket. 
-        int bytesRead = handler.EndReceive(ar);
-
-        if (bytesRead > 0)
+        while(true)
         {
-            // There  might be more data, so store the data received so far.
-            state.sb.Append(Encoding.ASCII.GetString(state.buffer, 0, bytesRead));
-            // Check for end-of-file tag. If it is not there, read 
-            // more data.
-            content = state.sb.ToString();
-            if (content.IndexOf("<EOF>") > -1)
+            String content = String.Empty;
+
+            // Retrieve the state object and the handler socket
+            // from the asynchronous state object.
+            StateObject state = (StateObject)ar.AsyncState;
+            Socket handler = state.workSocket;
+
+            // Read data from the client socket. 
+            int bytesRead = handler.EndReceive(ar);
+
+            if (bytesRead > 0)
             {
-                parametri_app = content.Split('<');
-                parametri = parametri_app[0].Split('#');
-
-                //Ricevuti i dati, distingue il tipo di pacchetto (il campo Type è il primo campo del pacchetto)
-                if (parametri[0] == "0") //Ho ricevuto dati ambientali
+                // There  might be more data, so store the data received so far.
+                state.sb.Append(Encoding.ASCII.GetString(state.buffer, 0, bytesRead));
+                // Check for end-of-file tag. If it is not there, read 
+                // more data.
+                content = state.sb.ToString();
+                if (content.IndexOf("<EOF>") > -1)
                 {
-                    Console.WriteLine(parametri[0]);
-                    Console.WriteLine(parametri[1]);
-                    Console.WriteLine(parametri[2]);
-                    Console.WriteLine(parametri[3]);
-                    Console.WriteLine(parametri[4]);
+                    parametri_app = content.Split('<');
+                    parametri = parametri_app[0].Split('#');
 
-                    new_parameters_env = true;
-                    //Dopo aver ricevuto i dati, salvali in un DB: 
-                    MySqlCommand cmd = new MySqlCommand();
-
-                    //Controlla il superamento delle soglie e invia email in caso d'errore
-                    //(l'aggiornamento del DB è fatto da un trigger)
-                    int minUmid = 0, maxUmid = 0, minPres = 0, maxPres = 0;
-                    float minTemp = 0, maxTemp = 0;
-                    cmd.Connection = DataBase_Connection.Open_Connection_DB();
-                    cmd.CommandText = "SELECT * from soglia";
-                    MySqlDataReader reader = cmd.ExecuteReader();
-                    //Leggi soglie
-                   /* while (reader.Read())
+                    //Ricevuti i dati, distingue il tipo di pacchetto (il campo Type è il primo campo del pacchetto)
+                    if (parametri[0] == "0") //Ho ricevuto dati ambientali
                     {
-                        minUmid = reader.GetInt32("minUmid");
-                        maxUmid = reader.GetInt32("maxUmid");
-                        minPres = reader.GetInt32("minPress");
-                        maxPres = reader.GetInt32("maxPress");
-                        minTemp = reader.GetFloat("minTemp");
-                        maxTemp = reader.GetFloat("maxTemp");
+                        Console.WriteLine(parametri[0]);
+                        Console.WriteLine(parametri[1]);
+                        Console.WriteLine(parametri[2]);
+                        Console.WriteLine(parametri[3]);
+                        Console.WriteLine(parametri[4]);
+
+                        new_parameters_env = true;
+                        //Dopo aver ricevuto i dati, salvali in un DB: 
+                        MySqlCommand cmd = new MySqlCommand();
+
+                        //Controlla il superamento delle soglie e invia email in caso d'errore
+                        //(l'aggiornamento del DB è fatto da un trigger)
+                        int minUmid = 0, maxUmid = 0, minPres = 0, maxPres = 0;
+                        float minTemp = 0, maxTemp = 0;
+                        cmd.Connection = DataBase_Connection.Open_Connection_DB();
+                        cmd.CommandText = "SELECT * from soglia";
+                        MySqlDataReader reader = cmd.ExecuteReader();
+                        //Leggi soglie
+                        /* while (reader.Read())
+                         {
+                             minUmid = reader.GetInt32("minUmid");
+                             maxUmid = reader.GetInt32("maxUmid");
+                             minPres = reader.GetInt32("minPress");
+                             maxPres = reader.GetInt32("maxPress");
+                             minTemp = reader.GetFloat("minTemp");
+                             maxTemp = reader.GetFloat("maxTemp");
+                         }
+                         reader.Close();
+                         //OTTIENI L'INDIRIZZO EMAIL DEL TITOLARE DELLA PALESTRA
+
+                         //Invia mail
+                         if (float.Parse(parametri[2]) > maxTemp || float.Parse(parametri[2]) < minTemp || int.Parse(parametri[3]) < minPres || int.Parse(parametri[3]) > maxPres || int.Parse(parametri[4]) < minUmid || int.Parse(parametri[4]) > maxUmid)
+                         {
+                             EmailSender.sendEmail(float.Parse(parametri[2]), int.Parse(parametri[3]), int.Parse(parametri[4]), "fabiopalumbo@msn");
+                         } */
+
+                        cmd.CommandText = "INSERT INTO misura_ambientale(pressione, temperatura, umidita, Idsensore_ambientale) VALUES(?pressione, ?temperatura, ?umidita, ?idsensore)";
+                        cmd.Parameters.Add("?idsensore", MySqlDbType.VarChar).Value = parametri[1];
+                        cmd.Parameters.Add("?temperatura", MySqlDbType.Float).Value = parametri[2];
+                        cmd.Parameters.Add("?pressione", MySqlDbType.Int32).Value = parametri[3];
+                        cmd.Parameters.Add("?umidita", MySqlDbType.Int32).Value = parametri[4];
+                        cmd.ExecuteNonQuery();
                     }
-                    reader.Close();
-                    //OTTIENI L'INDIRIZZO EMAIL DEL TITOLARE DELLA PALESTRA
-
-                    //Invia mail
-                    if (float.Parse(parametri[2]) > maxTemp || float.Parse(parametri[2]) < minTemp || int.Parse(parametri[3]) < minPres || int.Parse(parametri[3]) > maxPres || int.Parse(parametri[4]) < minUmid || int.Parse(parametri[4]) > maxUmid)
+                    else if (parametri[0] == "1") //Ho ricevuto dati relativi all'attività fisica
                     {
-                        EmailSender.sendEmail(float.Parse(parametri[2]), int.Parse(parametri[3]), int.Parse(parametri[4]), "fabiopalumbo@msn");
-                    } */
+                        Console.WriteLine(parametri[0]);
+                        Console.WriteLine(parametri[1]);
+                        Console.WriteLine(parametri[2]);
 
-                    cmd.CommandText = "INSERT INTO misura_ambientale(pressione, temperatura, umidita, Idsensore_ambientale) VALUES(?pressione, ?temperatura, ?umidita, ?idsensore)";
-                    cmd.Parameters.Add("?idsensore", MySqlDbType.VarChar).Value = parametri[1];
-                    cmd.Parameters.Add("?temperatura", MySqlDbType.Float).Value = parametri[2];
-                    cmd.Parameters.Add("?pressione", MySqlDbType.Int32).Value = parametri[3];
-                    cmd.Parameters.Add("?umidita", MySqlDbType.Int32).Value = parametri[4];
-                    cmd.ExecuteNonQuery();
+                        Classifier ClAct = new Classifier();
+                        new_parameters_activity = true;
+                        //Dopo aver ricevuto i dati, salvali in un DB: 
+                        MySqlCommand cmd = new MySqlCommand();
+                        cmd.Connection = DataBase_Connection.Open_Connection_DB();
+                        cmd.CommandText = "INSERT INTO misura_actigrafo(indice_attività, idactigrafo) VALUES(?indice_attività, ?id_actigrafo)";
+                        cmd.Parameters.Add("?id_actigrafo", MySqlDbType.VarChar).Value = parametri[1];
+
+                        cmd.Parameters.Add("?indice_attività", MySqlDbType.Int32).Value = ClAct.classifica_attività(Int32.Parse(parametri[2]));
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    // Show the data on the console.
+                    Console.WriteLine("Text received : {0}", data);
+
                 }
-                else if (parametri[0] == "1") //Ho ricevuto dati relativi all'attività fisica
-                {
-                    Console.WriteLine(parametri[0]);
-                    Console.WriteLine(parametri[1]);
-                    Console.WriteLine(parametri[2]);
-
-                    Classifier ClAct = new Classifier();
-                    new_parameters_activity = true;
-                    //Dopo aver ricevuto i dati, salvali in un DB: 
-                    MySqlCommand cmd = new MySqlCommand();
-                    cmd.Connection = DataBase_Connection.Open_Connection_DB();
-                    cmd.CommandText = "INSERT INTO misura_actigrafo(indice_attività, idactigrafo) VALUES(?indice_attività, ?id_actigrafo)";
-                    cmd.Parameters.Add("?id_actigrafo", MySqlDbType.VarChar).Value = parametri[1];
-
-                    cmd.Parameters.Add("?indice_attività", MySqlDbType.Int32).Value = ClAct.classifica_attività(Int32.Parse(parametri[2]));
-                    cmd.ExecuteNonQuery();
-                }
-
-                // Show the data on the console.
-                Console.WriteLine("Text received : {0}", data);
-
-
                 /* 
                 parametri_app = content.Split('<');
                 parametri = parametri_app[0].Split('#');
