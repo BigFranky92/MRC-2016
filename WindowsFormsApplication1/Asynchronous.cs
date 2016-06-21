@@ -261,22 +261,20 @@ public class Asynchronous
 
     public static void ReadCallback(IAsyncResult ar)
     {
-        while(true)
+         String content = String.Empty;
+         // Retrieve the state object and the handler socket
+         // from the asynchronous state object.
+         StateObject state = (StateObject)ar.AsyncState;
+         Socket handler = state.workSocket;
+
+        // Read data from the client socket.
+        int bytesRead = handler.EndReceive(ar);
+        while (true)
         {
-            String content = String.Empty;
-
-            // Retrieve the state object and the handler socket
-            // from the asynchronous state object.
-            StateObject state = (StateObject)ar.AsyncState;
-            Socket handler = state.workSocket;
-
-            // Read data from the client socket.
-            //int bytesRead = handler.EndReceive(ar);
-
-            //if (bytesRead > 0)
-            //{
+            if (bytesRead > 0)
+            {
                 // There  might be more data, so store the data received so far.
-            //    state.sb.Append(Encoding.ASCII.GetString(state.buffer, 0, bytesRead));
+                state.sb.Append(Encoding.ASCII.GetString(state.buffer, 0, bytesRead));
                 // Check for end-of-file tag. If it is not there, read 
                 // more data.
                 content = state.sb.ToString();
@@ -416,7 +414,7 @@ public class Asynchronous
                     content.Length, content);
                 // Echo the data back to the client.
                 Send(handler, content); */
-            //}
+            }
             else
             {
                 // Not all data received. Get more.
