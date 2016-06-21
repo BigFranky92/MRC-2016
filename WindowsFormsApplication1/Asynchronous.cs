@@ -268,6 +268,7 @@ public class Asynchronous
          Socket handler = state.workSocket;
 
         // Read data from the client socket.
+        //QUI SI VERIFICA L'ECCEZIONE QUANDO DISCONNETTO I CLIENT
         int bytesRead = handler.EndReceive(ar);
             //if (bytesRead > 0)
             //{
@@ -336,17 +337,17 @@ public class Asynchronous
                         Classifier ClAct = new Classifier();
                         new_parameters_activity = true;
                         //Dopo aver ricevuto i dati, salvali in un DB: 
-                        MySqlCommand cmd = new MySqlCommand();
+                        /*MySqlCommand cmd = new MySqlCommand();
                         cmd.Connection = DataBase_Connection.Open_Connection_DB();
                         cmd.CommandText = "INSERT INTO misura_actigrafo(indice_attività, idactigrafo) VALUES(?indice_attività, ?id_actigrafo)";
                         cmd.Parameters.Add("?id_actigrafo", MySqlDbType.VarChar).Value = parametri[1];
 
                         cmd.Parameters.Add("?indice_attività", MySqlDbType.Int32).Value = ClAct.classifica_attività(Int32.Parse(parametri[2]));
-                        cmd.ExecuteNonQuery();
+                        cmd.ExecuteNonQuery(); */
                     }
 
                     // Show the data on the console.
-                    Console.WriteLine("Text received : {0}", data);
+                    Console.WriteLine("Text received : {0}", content);
                 }
                 /* 
                 parametri_app = content.Split('<');
