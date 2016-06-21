@@ -54,7 +54,6 @@ public class Asynchronous
         //ris = SocketConnected(listener);
 
         //Console.WriteLine(ris.ToString());
-
         // Bind the socket to the local endpoint and listen for incoming connections.
         try
         {
@@ -246,7 +245,7 @@ public class Asynchronous
      public static void AcceptCallback(IAsyncResult ar)
     {
         // Get the socket that handles the client request.
-        Socket listener = (Socket)ar.AsyncState;
+        Socket listener = (Socket) ar.AsyncState;
         Socket handler = listener.EndAccept(ar);
 
         // Signal the main thread to continue.
@@ -265,7 +264,7 @@ public class Asynchronous
 
         // Retrieve the state object and the handler socket
         // from the asynchronous state object.
-        StateObject state = (StateObject)ar.AsyncState;
+        StateObject state = (StateObject) ar.AsyncState;
         Socket handler = state.workSocket;
 
         // Read data from the client socket. 
@@ -280,7 +279,7 @@ public class Asynchronous
             content = state.sb.ToString();
             if (content.IndexOf("<EOF>") > -1)
             {
-                parametri_app = data.Split('<');
+                parametri_app = content.Split('<');
                 parametri = parametri_app[0].Split('#');
 
                 //Ricevuti i dati, distingue il tipo di pacchetto (il campo Type è il primo campo del pacchetto)
@@ -304,7 +303,7 @@ public class Asynchronous
                     cmd.CommandText = "SELECT * from soglia";
                     MySqlDataReader reader = cmd.ExecuteReader();
                     //Leggi soglie
-                    while (reader.Read())
+                   /* while (reader.Read())
                     {
                         minUmid = reader.GetInt32("minUmid");
                         maxUmid = reader.GetInt32("maxUmid");
@@ -320,7 +319,7 @@ public class Asynchronous
                     if (float.Parse(parametri[2]) > maxTemp || float.Parse(parametri[2]) < minTemp || int.Parse(parametri[3]) < minPres || int.Parse(parametri[3]) > maxPres || int.Parse(parametri[4]) < minUmid || int.Parse(parametri[4]) > maxUmid)
                     {
                         EmailSender.sendEmail(float.Parse(parametri[2]), int.Parse(parametri[3]), int.Parse(parametri[4]), "fabiopalumbo@msn");
-                    }
+                    } */
 
                     cmd.CommandText = "INSERT INTO misura_ambientale(pressione, temperatura, umidita, Idsensore_ambientale) VALUES(?pressione, ?temperatura, ?umidita, ?idsensore)";
                     cmd.Parameters.Add("?idsensore", MySqlDbType.VarChar).Value = parametri[1];
