@@ -269,10 +269,8 @@ public class Asynchronous
 
         // Read data from the client socket.
         int bytesRead = handler.EndReceive(ar);
-        while (true)
-        {
-            if (bytesRead > 0)
-            {
+            //if (bytesRead > 0)
+            //{
                 // There  might be more data, so store the data received so far.
                 state.sb.Append(Encoding.ASCII.GetString(state.buffer, 0, bytesRead));
                 // Check for end-of-file tag. If it is not there, read 
@@ -349,8 +347,6 @@ public class Asynchronous
 
                     // Show the data on the console.
                     Console.WriteLine("Text received : {0}", data);
-                    bytesRead = 0;
-
                 }
                 /* 
                 parametri_app = content.Split('<');
@@ -415,15 +411,15 @@ public class Asynchronous
                     content.Length, content);
                 // Echo the data back to the client.
                 Send(handler, content); */
-            }
-            else
-            {
-                // Not all data received. Get more.
-                state.buffer = new byte[1024];
-                handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
+            //}
+            //else
+            //{
+            // Not all data received. Get more.
+            state = new StateObject();
+            state.workSocket = handler;
+            handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
                 new AsyncCallback(ReadCallback), state);
-            }
-        }
+            //}
     }
 
 
