@@ -419,6 +419,7 @@ public class Asynchronous
             else
             {
                 // Not all data received. Get more.
+                state.buffer = new byte[1024];
                 handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
                 new AsyncCallback(ReadCallback), state);
             }
