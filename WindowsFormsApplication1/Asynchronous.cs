@@ -25,6 +25,8 @@ public class Asynchronous
     public static string[] parametri_app;
     public static bool new_parameters_env = false; //Segnala la presenza di nuovi dati ambientali
     public static bool new_parameters_activity = false; //Segnala la presenza di dati relativi all'attività fisica
+    public static bool new_client = false; //Segnala la presenza di nuovi client
+    public static string new_client_IP;
     public static Socket listener;
     // Thread signal.
     public static ManualResetEvent allDone = new ManualResetEvent(false);
@@ -49,7 +51,6 @@ public class Asynchronous
         Socket listener = new Socket(AddressFamily.InterNetwork,
             SocketType.Stream, ProtocolType.Tcp);
 
-        //Console.WriteLine(ris.ToString());
         // Bind the socket to the local endpoint and listen for incoming connections.
         try
         {
@@ -80,86 +81,100 @@ public class Asynchronous
 
      public static void AcceptCallback(IAsyncResult ar)
     {
-        // Get the socket that handles the client request.
-        Socket listener = (Socket) ar.AsyncState;
-        Socket handler = listener.EndAccept(ar);
-
-        // Signal the main thread to continue.
-        allDone.Set();
-
-        // Create the state object.
-        StateObject state = new StateObject();
-        state.workSocket = handler;
-        Console.WriteLine("Connection Accepted from ... " + handler.RemoteEndPoint.ToString());
-        handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
-            new AsyncCallback(ReadCallback), state);
+        try
+        {
+            // Get the socket that handles the client request.
+            Socket listener = (Socket)ar.AsyncState;
+            Socket handler = listener.EndAccept(ar);
+            // Signal the main thread to continue.
+            allDone.Set();
+            // Create the state object.
+            StateObject state = new StateObject();
+            state.workSocket = handler;
+            Console.WriteLine("Connection Accepted from ... " + handler.RemoteEndPoint.ToString());
+            new_client_IP = handler.RemoteEndPoint.ToString();
+            new_client = true;
+            handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
+                new AsyncCallback(ReadCallback), state);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.ToString());
+        }      
     }
 
     public static void ReadCallback(IAsyncResult ar)
     {
-         String content = String.Empty;
-         // Retrieve the state object and the handler socket
-         // from the asynchronous state object.
-         StateObject state = (StateObject)ar.AsyncState;
-         Socket handler = state.workSocket;
-
-        // Read data from the client socket.
-        //QUI SI VERIFICA L'ECCEZIONE QUANDO DISCONNETTO I CLIENT
-        int bytesRead = handler.EndReceive(ar);
-        // There  might be more data, so store the data received so far.
-        state.sb.Append(Encoding.ASCII.GetString(state.buffer, 0, bytesRead));
-        // Check for end-of-file tag. If it is not there, read 
-        // more data.
-        content = state.sb.ToString();
-        if (content.IndexOf("<EOF>") > -1)
+        try
         {
-            parametri_app = content.Split('<');
-            parametri = parametri_app[0].Split('#');
+            String content = String.Empty;
+            // Retrieve the state object and the handler socket
+            // from the asynchronous state object.
+            StateObject state = (StateObject)ar.AsyncState;
+            Socket handler = state.workSocket;
 
-            //Ricevuti i dati, distingue il tipo di pacchetto (il campo Type è il primo campo del pacchetto)
-            if (parametri[0] == "0") //Ho ricevuto dati ambientali
+            // Read data from the client socket.
+            //QUI SI VERIFICA L'ECCEZIONE QUANDO DISCONNETTO I CLIENT
+            int bytesRead = handler.EndReceive(ar);
+            // There  might be more data, so store the data received so far.
+            state.sb.Append(Encoding.ASCII.GetString(state.buffer, 0, bytesRead));
+            // Check for end-of-file tag. If it is not there, read 
+            // more data.
+            content = state.sb.ToString();
+            if (content.IndexOf("<EOF>") > -1)
             {
-                Console.WriteLine(parametri[0]);
-                Console.WriteLine(parametri[1]);
-                Console.WriteLine(parametri[2]);
-                Console.WriteLine(parametri[3]);
-                Console.WriteLine(parametri[4]);
+                parametri_app = content.Split('<');
+                parametri = parametri_app[0].Split('#');
 
-                new_parameters_env = true;
-                //Dopo aver ricevuto i dati, salvali in un DB: 
-                MySqlCommand cmd = new MySqlCommand();
-                cmd.CommandText = "INSERT INTO misura_ambientale(pressione, temperatura, umidita, Idsensore_ambientale) VALUES(?pressione, ?temperatura, ?umidita, ?idsensore)";
-                cmd.Parameters.Add("?idsensore", MySqlDbType.VarChar).Value = parametri[1];
-                cmd.Parameters.Add("?temperatura", MySqlDbType.Float).Value = parametri[2];
-                cmd.Parameters.Add("?pressione", MySqlDbType.Int32).Value = parametri[3];
-                cmd.Parameters.Add("?umidita", MySqlDbType.Int32).Value = parametri[4];
-                cmd.ExecuteNonQuery();
-                cmd.Connection.Close();
+                //Ricevuti i dati, distingue il tipo di pacchetto (il campo Type è il primo campo del pacchetto)
+                if (parametri[0] == "0") //Ho ricevuto dati ambientali
+                {
+                    Console.WriteLine(parametri[0]);
+                    Console.WriteLine(parametri[1]);
+                    Console.WriteLine(parametri[2]);
+                    Console.WriteLine(parametri[3]);
+                    Console.WriteLine(parametri[4]);
 
+                    new_parameters_env = true;
+                    //Dopo aver ricevuto i dati, salvali in un DB: 
+                    MySqlCommand cmd = new MySqlCommand();
+                    cmd.CommandText = "INSERT INTO misura_ambientale(pressione, temperatura, umidita, Idsensore_ambientale) VALUES(?pressione, ?temperatura, ?umidita, ?idsensore)";
+                    cmd.Parameters.Add("?idsensore", MySqlDbType.VarChar).Value = parametri[1];
+                    cmd.Parameters.Add("?temperatura", MySqlDbType.Float).Value = parametri[2];
+                    cmd.Parameters.Add("?pressione", MySqlDbType.Int32).Value = parametri[3];
+                    cmd.Parameters.Add("?umidita", MySqlDbType.Int32).Value = parametri[4];
+                    cmd.ExecuteNonQuery();
+                    cmd.Connection.Close();
+
+                }
+                else if (parametri[0] == "1") //Ho ricevuto dati relativi all'attività fisica
+                {
+                    Console.WriteLine(parametri[0]);
+                    Console.WriteLine(parametri[1]);
+                    Console.WriteLine(parametri[2]);
+                    Classifier ClAct = new Classifier();
+                    new_parameters_activity = true;
+                    //Dopo aver ricevuto i dati, salvali in un DB: 
+                    MySqlCommand cmd = new MySqlCommand();
+                    cmd.Connection = DataBase_Connection.Open_Connection_DB();
+                    cmd.CommandText = "INSERT INTO misura_actigrafo(indice_attività, idactigrafo) VALUES(?indice_attività, ?id_actigrafo)";
+                    cmd.Parameters.Add("?id_actigrafo", MySqlDbType.VarChar).Value = parametri[1];
+                    cmd.Parameters.Add("?indice_attività", MySqlDbType.Int32).Value = ClAct.classifica_attività(Int32.Parse(parametri[2]));
+                    cmd.ExecuteNonQuery();
+                    cmd.Connection.Close();
+                }
+                // Show the data on the console.
+                Console.WriteLine("Text received : {0}", content);
             }
-            else if (parametri[0] == "1") //Ho ricevuto dati relativi all'attività fisica
-            {
-                Console.WriteLine(parametri[0]);
-                Console.WriteLine(parametri[1]);
-                Console.WriteLine(parametri[2]);
-                Classifier ClAct = new Classifier();
-                new_parameters_activity = true;
-                //Dopo aver ricevuto i dati, salvali in un DB: 
-                MySqlCommand cmd = new MySqlCommand();
-                cmd.Connection = DataBase_Connection.Open_Connection_DB();
-                cmd.CommandText = "INSERT INTO misura_actigrafo(indice_attività, idactigrafo) VALUES(?indice_attività, ?id_actigrafo)";
-                cmd.Parameters.Add("?id_actigrafo", MySqlDbType.VarChar).Value = parametri[1];
-                cmd.Parameters.Add("?indice_attività", MySqlDbType.Int32).Value = ClAct.classifica_attività(Int32.Parse(parametri[2]));
-                cmd.ExecuteNonQuery();
-                cmd.Connection.Close();
-            }
-            // Show the data on the console.
-            Console.WriteLine("Text received : {0}", content);
+            state = new StateObject();
+            state.workSocket = handler;
+            handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
+                    new AsyncCallback(ReadCallback), state);
         }
-        state = new StateObject();
-        state.workSocket = handler;
-        handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
-                new AsyncCallback(ReadCallback), state);
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.ToString());
+        }
     }
 
     private static void Send(Socket handler, String data)

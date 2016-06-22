@@ -181,6 +181,27 @@ namespace WindowsFormsApplication1
 
                     Asynchronous.new_parameters_activity = false;
                 }
+                else if(Asynchronous.new_client)
+                {
+                    try
+                    {
+                        if (idBox.InvokeRequired) //Viene utilizzato il metodo InvokeRequired in quanto il thread che va ad aggiornare le textBox non è lo stesso che le ha create, e quindi non ha un vero e proprio controllo su di esse
+                        {
+                            logBox.Invoke((MethodInvoker)delegate {
+                                logBox.AppendText("\r\nNuova connessione accettata da: " + Asynchronous.new_client_IP + "\r\n" );
+                            });
+                        }
+                        else
+                        {
+                            logBox.AppendText("\r\nNuova connessione accettata da: " + Asynchronous.new_client_IP + "\r\n");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.Write(ex.ToString());
+                    }
+                    Asynchronous.new_client = false;
+                }
             }
         }
 
