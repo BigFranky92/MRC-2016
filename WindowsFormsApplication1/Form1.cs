@@ -128,9 +128,7 @@ namespace WindowsFormsApplication1
                                 logBox.AppendText("\r\n => Ricevuti dati da sensore ambientale:  ");
                                 logBox.AppendText("\r\n     ID = " + Asynchronous.parametri[1] + "\r\n     Temperatura = " + Asynchronous.parametri[2] + "\r\n     Pressione = " + Asynchronous.parametri[3] + "\r\n     Umidità = " + Asynchronous.parametri[4]);
                             });
-                        }
-                        
-                            
+                        }                       
                         else
                         {
                             idBox.Text = Asynchronous.parametri[1];

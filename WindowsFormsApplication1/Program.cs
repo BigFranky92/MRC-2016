@@ -16,8 +16,6 @@ namespace WindowsFormsApplication1
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            //EmailSender.sendEmail(1, 1, 1, "mrc.gruppo@libero.it");
-            //EmailSender.sendEmail(1, 1, 1, "fabiopalumbo@msn.com");
             Application.Run(new Form1());
         }
     }
