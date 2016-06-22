@@ -138,12 +138,14 @@ public class Asynchronous
                     new_parameters_env = true;
                     //Dopo aver ricevuto i dati, salvali in un DB: 
                     MySqlCommand cmd = new MySqlCommand();
-                    cmd.CommandText = "INSERT INTO misura_ambientale(pressione, temperatura, umidita, Idsensore_ambientale) VALUES(?pressione, ?temperatura, ?umidita, ?idsensore)";
+                    cmd.Connection = DataBase_Connection.Open_Connection_DB();
+                    cmd.CommandText = "INSERT INTO misura_ambientale(pressione, temperatura, umidita, idsensore_ambientale) VALUES(?pressione, ?temperatura, ?umidita, ?idsensore)";
                     cmd.Parameters.Add("?idsensore", MySqlDbType.VarChar).Value = parametri[1];
                     cmd.Parameters.Add("?temperatura", MySqlDbType.Float).Value = parametri[2];
                     cmd.Parameters.Add("?pressione", MySqlDbType.Int32).Value = parametri[3];
                     cmd.Parameters.Add("?umidita", MySqlDbType.Int32).Value = parametri[4];
                     cmd.ExecuteNonQuery();
+
                     cmd.Connection.Close();
 
                 }
@@ -161,6 +163,7 @@ public class Asynchronous
                     cmd.Parameters.Add("?id_actigrafo", MySqlDbType.VarChar).Value = parametri[1];
                     cmd.Parameters.Add("?indice_attività", MySqlDbType.Int32).Value = ClAct.classifica_attività(Int32.Parse(parametri[2]));
                     cmd.ExecuteNonQuery();
+
                     cmd.Connection.Close();
                 }
                 // Show the data on the console.
