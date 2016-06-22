@@ -300,33 +300,38 @@ public class Asynchronous
                         int minUmid = 0, maxUmid = 0, minPres = 0, maxPres = 0;
                         float minTemp = 0, maxTemp = 0;
                         cmd.Connection = DataBase_Connection.Open_Connection_DB();
-                        cmd.CommandText = "SELECT * from soglia";
-                        MySqlDataReader reader = cmd.ExecuteReader();
-                        //Leggi soglie
-                        /* while (reader.Read())
-                         {
-                             minUmid = reader.GetInt32("minUmid");
-                             maxUmid = reader.GetInt32("maxUmid");
-                             minPres = reader.GetInt32("minPress");
-                             maxPres = reader.GetInt32("maxPress");
-                             minTemp = reader.GetFloat("minTemp");
-                             maxTemp = reader.GetFloat("maxTemp");
-                         }
-                         reader.Close();
-                         //OTTIENI L'INDIRIZZO EMAIL DEL TITOLARE DELLA PALESTRA
 
-                         //Invia mail
-                         if (float.Parse(parametri[2]) > maxTemp || float.Parse(parametri[2]) < minTemp || int.Parse(parametri[3]) < minPres || int.Parse(parametri[3]) > maxPres || int.Parse(parametri[4]) < minUmid || int.Parse(parametri[4]) > maxUmid)
-                         {
-                             EmailSender.sendEmail(float.Parse(parametri[2]), int.Parse(parametri[3]), int.Parse(parametri[4]), "fabiopalumbo@msn");
-                         } */
+                /*cmd.CommandText = "SELECT * from soglia";
+                  MySqlDataReader reader = cmd.ExecuteReader();
+                //Leggi soglie
+                 while (reader.Read())
+                 {
+                     minUmid = reader.GetInt32("minUmid");
+                     maxUmid = reader.GetInt32("maxUmid");
+                     minPres = reader.GetInt32("minPress");
+                     maxPres = reader.GetInt32("maxPress");
+                     minTemp = reader.GetFloat("minTemp");
+                     maxTemp = reader.GetFloat("maxTemp");
+                 }
+                 reader.Close();
+                 //OTTIENI L'INDIRIZZO EMAIL DEL TITOLARE DELLA PALESTRA
 
-                        cmd.CommandText = "INSERT INTO misura_ambientale(pressione, temperatura, umidita, Idsensore_ambientale) VALUES(?pressione, ?temperatura, ?umidita, ?idsensore)";
+                 //Invia mail
+                 if (float.Parse(parametri[2]) > maxTemp || float.Parse(parametri[2]) < minTemp || int.Parse(parametri[3]) < minPres || int.Parse(parametri[3]) > maxPres || int.Parse(parametri[4]) < minUmid || int.Parse(parametri[4]) > maxUmid)
+                 {
+                     EmailSender.sendEmail(float.Parse(parametri[2]), int.Parse(parametri[3]), int.Parse(parametri[4]), "fabiopalumbo@msn");
+                 } */
+
+                cmd.CommandText = "INSERT INTO misura_ambientale(pressione, temperatura, umidita, Idsensore_ambientale) VALUES(?pressione, ?temperatura, ?umidita, ?idsensore)";
                         cmd.Parameters.Add("?idsensore", MySqlDbType.VarChar).Value = parametri[1];
                         cmd.Parameters.Add("?temperatura", MySqlDbType.Float).Value = parametri[2];
                         cmd.Parameters.Add("?pressione", MySqlDbType.Int32).Value = parametri[3];
                         cmd.Parameters.Add("?umidita", MySqlDbType.Int32).Value = parametri[4];
+                        
                         cmd.ExecuteNonQuery();
+                        
+                        cmd.Connection.Close();
+
                     }
                     else if (parametri[0] == "1") //Ho ricevuto dati relativi all'attività fisica
                     {
@@ -337,14 +342,15 @@ public class Asynchronous
                         Classifier ClAct = new Classifier();
                         new_parameters_activity = true;
                         //Dopo aver ricevuto i dati, salvali in un DB: 
-                        /*MySqlCommand cmd = new MySqlCommand();
+                        MySqlCommand cmd = new MySqlCommand();
                         cmd.Connection = DataBase_Connection.Open_Connection_DB();
                         cmd.CommandText = "INSERT INTO misura_actigrafo(indice_attività, idactigrafo) VALUES(?indice_attività, ?id_actigrafo)";
                         cmd.Parameters.Add("?id_actigrafo", MySqlDbType.VarChar).Value = parametri[1];
 
                         cmd.Parameters.Add("?indice_attività", MySqlDbType.Int32).Value = ClAct.classifica_attività(Int32.Parse(parametri[2]));
-                        cmd.ExecuteNonQuery(); */
-                    }
+                        cmd.ExecuteNonQuery();
+                        cmd.Connection.Close();
+            }
 
                     // Show the data on the console.
                     Console.WriteLine("Text received : {0}", content);
@@ -464,18 +470,20 @@ public class Asynchronous
 
     public static void close_socket() {
 
-        try
+        if (listener != null)
         {
-            listener.Shutdown(SocketShutdown.Send);
-            listener.Close();
-        }
-        catch (SocketException se)
-        {
+            try
+            {
+                listener.Shutdown(SocketShutdown.Send);
+                listener.Close();
+            }
+            catch (SocketException se)
+            {
 
 
-            listener.Close();
-            Console.WriteLine(se.ToString());
-
+                listener.Close();
+                Console.WriteLine(se.ToString());
+            }
         }
     }
 
