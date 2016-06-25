@@ -237,10 +237,16 @@ namespace WindowsFormsApplication1
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
-            
-            Asynchronous.close_socket();
-            workerThread.Abort();
-            Application.Exit();
+            try
+            {
+                Asynchronous.close_socket();
+                workerThread.Abort();
+                Application.Exit();
+            }
+            catch (Exception ecc)
+            {
+                Console.WriteLine(ecc.ToString());
+            }
 
         }
     }
